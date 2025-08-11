@@ -416,22 +416,28 @@
               </div>
 
               {active && (
-                <section className="soft-card" onPointerDown={e=>e.stopPropagation()} aria-label="History (Last 14 days)">
-                  <div className="row" style={{justifyContent:"space-between"}}>
-                    <strong>Last 14 days</strong>
-                    <span className="pill">{active.name}{active.city?` • ${active.city}`:""}</span>
-                  </div>
-                  {Object.keys(active.dayCounts||{}).length ? (
-                    <table className="table" role="table" aria-label="Daily history">
-                      <thead><tr><th scope="col">Date</th><th scope="col">Count</th></tr></thead>
-                      <tbody>
-                        {Object.entries(active.dayCounts).sort((a,b)=> a[0]<b[0]?1:-1).slice(0,14).map(([d,c])=>(
-                          <tr key={d}><td>{d}</td><td>{c}</td></tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : <div className="footer">No history yet — tap to begin.</div>}
-                </section>
+                <section className="soft-card" onPointerDown={stop} aria-label="Profile">
+  {noUsers ? (
+    // create form code yahan rahega
+  ) : (
+    <>
+      <div className="row" style={{justifyContent:"space-between", alignItems:"center"}}>
+        <div style={{fontWeight:"900", fontSize:"1.25rem", color:"#fff"}}>
+          {active?.name}{active?.city ? ` • ${active.city}` : ""}
+        </div>
+        <button 
+          onPointerDown={stop} 
+          onClick={()=>deleteUser(active.id)} 
+          aria-label="Delete active user" 
+          style={{background:"rgba(255,255,255,0.2)", borderRadius:"50%", padding:"8px"}}
+        >
+          🗑
+        </button>
+      </div>
+    </>
+  )}
+</section>
+
               )}
 
               {Object.values(store.users||{}).length>1 && (
