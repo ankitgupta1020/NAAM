@@ -2,13 +2,38 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Radha Jaap Counter</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Radha Jaap Counter — Tap Anywhere to Count Mantras</title>
+    <meta name="description" content="Mobile-friendly Radha Jaap counter. Tap anywhere to add 1 mantra, track rounds (108), create your profile (name & city), see daily history and weekly leaderboard." />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="canonical" href="https://example.com/radha-jaap/" />
 
-    <!-- React + Babel via CDN -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- PWA / Theming -->
+    <meta name="theme-color" content="#f3722c" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/icons/icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Radha Jaap Counter">
+    <meta property="og:description" content="Tap anywhere to count mantras. Profiles, daily history, and weekly leaderboard.">
+    <meta property="og:url" content="https://example.com/radha-jaap/">
+    <meta property="og:image" content="https://example.com/og/radha-jaap-1200x630.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Radha Jaap Counter">
+    <meta name="twitter:description" content="Mobile-friendly counter with 108-round ring and weekly leaderboard.">
+    <meta name="twitter:image" content="https://example.com/og/radha-jaap-1200x630.png">
+
+    <!-- Preconnect for faster CDN fetch -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="dns-prefetch" href="//unpkg.com">
+
+    <!-- React + Babel via CDN (Note: for production, remove Babel and ship prebuilt JS) -->
+    <script defer crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script defer crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script defer crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
       :root{
@@ -18,6 +43,7 @@
         --safe-right: max(var(--pad), env(safe-area-inset-right));
         --safe-bottom: max(var(--pad), env(safe-area-inset-bottom));
         --safe-left: max(var(--pad), env(safe-area-inset-left));
+        --focus: #1f2937;
       }
       *{ box-sizing:border-box; }
       html,body{ height:100%; margin:0; }
@@ -28,13 +54,14 @@
         user-select:none;
         -webkit-tap-highlight-color: transparent;
       }
+      a:focus, button:focus, input:focus, select:focus{ outline:2px solid var(--focus); outline-offset:2px; }
+
       .screen{
-        min-height:100vh; width:100%;
+        min-height:100dvh; width:100%;
         display:flex; align-items:center; justify-content:center;
         overflow:hidden;
-        padding: calc(var(--safe-top)) calc(var(--safe-right)) calc(var(--safe-bottom)) calc(var(--safe-left));
+        padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
         position:relative;
-        /* helps avoid double-tap zoom and delays */
         touch-action: manipulation;
       }
       .wrap{
@@ -71,32 +98,25 @@
       }
       button{
         appearance:none; border:none; border-radius:999px;
-        padding:12px 18px; min-height:48px; /* ≥48px touch target */
+        padding:14px 20px; min-height:52px;
         font-weight:800; font-size: clamp(14px, 4vw, 16px);
         cursor:pointer;
-        background: rgba(255,255,255,.85); color:var(--fg);
+        background: rgba(255,255,255,.9); color:var(--fg);
         box-shadow:0 8px 18px rgba(0,0,0,.15);
         transition: transform .15s ease, filter .15s ease;
       }
-      @media (hover:hover){
-        button:hover{ filter:brightness(1.05); }
-      }
+      @media (hover:hover){ button:hover{ filter:brightness(1.05); } }
       button:active{ transform: translateY(1px); }
-      .footer{ font-size:12px; opacity:.75; margin-top:6px; }
+      .footer{ font-size:12px; opacity:.85; margin-top:6px; color:#fffde8 }
 
-      /* Ring SVG wrapper to scale responsively */
       .ring-wrap{
         width: min(84vw, 420px);
-        /* keep it square without JS layout thrash */
         aspect-ratio: 1 / 1;
         display:grid; place-items:center;
       }
       .ring-wrap svg{ width:100%; height:100%; display:block; }
 
-      /* Bursts layer */
-      .bursts{
-        position:fixed; inset:0; pointer-events:none; z-index:10; overflow:hidden;
-      }
+      .bursts{ position:fixed; inset:0; pointer-events:none; z-index:10; overflow:hidden; }
       .burst{
         position:absolute; left:0; top:0;
         transform: translate(-50%, -50%) scale(.85);
@@ -111,16 +131,31 @@
         70%{opacity:1; transform:translate(-50%,-50%) scale(1.08);}
         100%{opacity:0; transform:translate(-50%,-50%) scale(1.22);}
       }
-
-      /* Reduced motion */
       @media (prefers-reduced-motion: reduce){
         .burst{ animation-duration: 300ms; }
         button{ transition: none; }
       }
-    </style>
 
-    <!-- Floating UPI button -->
-    <style>
+      .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; }
+      .input{
+        background: rgba(255,255,255,.92);
+        border:1px solid rgba(0,0,0,.08);
+        border-radius:14px;
+        padding:12px 14px; min-height:48px;
+        font-size:16px; outline:none;
+        box-shadow:0 6px 14px rgba(0,0,0,.08) inset;
+      }
+      .table{
+        width:100%; border-collapse:separate; border-spacing:0 8px; color:#fffef4;
+        font-size:14px;
+      }
+      .table th{ text-align:left; opacity:.9; }
+      .table td, .table th{ padding:8px 10px; }
+      .pill{
+        display:inline-block; background:rgba(255,255,255,.18); padding:4px 10px; border-radius:999px; font-weight:700;
+      }
+
+      /* Floating UPI button */
       .upi-fab{
         position:fixed; right:16px;
         bottom: calc(16px + env(safe-area-inset-bottom));
@@ -131,109 +166,215 @@
         backdrop-filter: blur(6px);
       }
       .upi-fab:active{ transform:translateY(1px) }
+      .visually-hidden{ position:absolute!important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap; }
     </style>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Radha Jaap Counter",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Web",
+      "url": "https://example.com/radha-jaap/",
+      "description": "Tap anywhere to add 1 mantra, track 108-bead rounds, profiles with name & city, daily history, and weekly leaderboard.",
+      "inLanguage": "en",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Radha Jaap",
+        "url": "https://example.com/"
+      }
+    }
+    </script>
   </head>
   <body>
     <div id="bursts" class="bursts" aria-hidden="true"></div>
-    <div id="root"></div>
+
+    <main id="root" role="main" aria-label="Radha Jaap Counter App">
+      <noscript>
+        <div style="max-width:720px;margin:24px auto;padding:16px;background:#fff3;border-radius:12px">
+          <h1>Radha Jaap Counter</h1>
+          <p>This app needs JavaScript enabled. Tap anywhere to add mantras, track 108-bead rounds, and see your weekly leaderboard.</p>
+        </div>
+      </noscript>
+    </main>
 
     <script type="text/babel">
       const { useEffect, useMemo, useState } = React;
-
-      // helper: clamp utility
       const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+      const fmtDate = (d) => d.toISOString().slice(0,10);
+      const weekKeyOf = (date) => {
+        const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        const dayNum = (d.getUTCDay() + 6) % 7; d.setUTCDate(d.getUTCDate() - dayNum + 3);
+        const firstThu = new Date(Date.UTC(d.getUTCFullYear(),0,4));
+        const wk = 1 + Math.round((d - firstThu) / 604800000);
+        const yr = d.getUTCFullYear(); return `${yr}-${String(wk).padStart(2,'0')}`;
+      };
+      const LS_KEY = "rjc_store_v2";
+      const loadStore = () => { try{ return JSON.parse(localStorage.getItem(LS_KEY)) ?? {}; }catch{ return {}; } };
+      const saveStore = (s) => localStorage.setItem(LS_KEY, JSON.stringify(s));
 
-      function RadhaJaapCounter(){
-        const [count, setCount] = useState(() => {
-          const saved = localStorage.getItem("radha_jaap_count");
-          return saved ? parseInt(saved, 10) : 0;
-        });
-
-        // responsive ring size (in px) based on viewport width
+      function App(){
         const [size, setSize] = useState(() => clamp(Math.floor(window.innerWidth * 0.84), 220, 420));
         useEffect(() => {
-          let raf = 0;
-          const onResize = () => {
-            cancelAnimationFrame(raf);
-            raf = requestAnimationFrame(() => {
-              setSize(clamp(Math.floor(window.innerWidth * 0.84), 220, 420));
-            });
-          };
-          window.addEventListener("resize", onResize);
-          window.addEventListener("orientationchange", onResize);
-          return () => {
-            cancelAnimationFrame(raf);
-            window.removeEventListener("resize", onResize);
-            window.removeEventListener("orientationchange", onResize);
-          };
+          let raf=0; const onResize = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(()=> setSize(clamp(Math.floor(window.innerWidth*0.84), 220, 420))); };
+          window.addEventListener("resize", onResize, {passive:true}); window.addEventListener("orientationchange", onResize);
+          return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); window.removeEventListener("orientationchange", onResize); };
         }, []);
 
-        useEffect(() => { localStorage.setItem("radha_jaap_count", String(count)); }, [count]);
+        const [store, setStore] = useState(() => {
+          const s = loadStore(); if(!s.users){ s.users = {}; } if(!s.activeUserId){ s.activeUserId = null; } return s;
+        });
+        const active = store.activeUserId ? store.users?.[store.activeUserId] : null;
 
+        // weekly rollover
+        useEffect(() => {
+          const now = new Date(); const wk = weekKeyOf(now);
+          const s = {...store, users:{...store.users}}; let changed=false;
+          for(const [uid,u] of Object.entries(s.users)){
+            if(u.weekKey !== wk){ s.users[uid] = {...u, weekKey:wk, weekly:0}; changed = true; }
+          }
+          if(changed){ setStore(s); saveStore(s); }
+          // eslint-disable-next-line
+        }, []);
+
+        const count = active?.lifetime ?? 0;
         const within108 = count % 108;
         const bead = within108 + 1;
         const rounds = Math.floor(count / 108);
 
-        // geometry derived from responsive size
-        const stroke = 20;
-        const r = (size - stroke) / 2;
-        const C = 2 * Math.PI * r;
+        const stroke = 20; const r = (size - stroke) / 2; const C = 2 * Math.PI * r;
         const dashOffset = C * (1 - within108 / 108);
 
         const spawnBurst = (x, y) => {
-          const layer = document.getElementById("bursts");
-          if (!layer) return;
-          const el = document.createElement("span");
-          el.className = "burst";
-          el.textContent = "राधा";
-          el.style.left = x + "px";
-          el.style.top = y + "px";
-          layer.appendChild(el);
-          el.addEventListener("animationend", () => el.remove(), { once:true });
+          const layer = document.getElementById("bursts"); if(!layer) return;
+          const el = document.createElement("span"); el.className="burst"; el.textContent="राधा";
+          el.style.left = x+"px"; el.style.top = y+"px"; layer.appendChild(el);
+          el.addEventListener("animationend", ()=> el.remove(), {once:true});
+        };
+        const vibrate = (ms=10)=>{ try{ navigator.vibrate?.(ms);}catch{} };
+
+        const updateUser = (uid, mutator) => {
+          setStore(prev => {
+            const s = {...prev, users:{...prev.users}}; const u = s.users[uid]; if(!u) return prev;
+            const newU = mutator(u); s.users[uid] = newU; saveStore(s); return s;
+          });
+        };
+        const handleInc = (x, y) => {
+          if(!active) return;
+          updateUser(store.activeUserId, (u) => {
+            const now = new Date(); const wk = weekKeyOf(now); const today = fmtDate(now);
+            const dayCounts = {...(u.dayCounts||{})}; dayCounts[today] = (dayCounts[today]||0)+1;
+            return {...u, lifetime:u.lifetime+1, weekly:(u.weekKey===wk?u.weekly:0)+1, weekKey:wk, dayCounts};
+          });
+          vibrate(8); spawnBurst(x,y);
+        };
+        const handleDec = () => {
+          if(!active) return;
+          updateUser(store.activeUserId, (u) => {
+            const today = fmtDate(new Date()); const dayCounts = {...(u.dayCounts||{})};
+            if(u.lifetime>0){ if((dayCounts[today]||0)>0) dayCounts[today]-=1; return {...u, lifetime:u.lifetime-1, weekly:Math.max(0,u.weekly-1), dayCounts}; }
+            return u;
+          });
+          vibrate(6);
+        };
+        const resetToMultiple108 = () => {
+          if(!active) return;
+          updateUser(store.activeUserId, (u) => {
+            const diff = u.lifetime % 108; if(diff===0) return u;
+            return {...u, lifetime:u.lifetime-diff, weekly:Math.max(0,(u.weekly||0)-diff)};
+          });
+        };
+        const resetAllForActive = () => {
+          if(!active) return;
+          if(confirm("Reset this user's counts? (lifetime, weekly & day history)")){
+            updateUser(store.activeUserId, (u)=> ({...u, lifetime:0, weekly:0, dayCounts:{}}));
+          }
         };
 
-        // Unified pointer handler (avoids double-trigger on mobile)
-        const handlePointerDown = (e) => {
-          setCount(c => c + 1);
-          const x = e.clientX ?? window.innerWidth/2;
-          const y = e.clientY ?? window.innerHeight/2;
-          spawnBurst(x, y);
+        const onScreenPointerDown = (e) => {
+          const x = (e.clientX ?? e?.touches?.[0]?.clientX ?? window.innerWidth/2);
+          const y = (e.clientY ?? e?.touches?.[0]?.clientY ?? window.innerHeight/2);
+          handleInc(x, y);
+        };
+        const stop = (e)=> e.stopPropagation();
+
+        const [name, setName] = useState("");
+        const [city, setCity] = useState("");
+        const makeId = () => Math.random().toString(36).slice(2,10);
+
+        const addUser = () => {
+          const nm = name.trim(); const ct = city.trim();
+          if(!nm) return alert("Please enter your name");
+          const id = makeId(); const wk = weekKeyOf(new Date());
+          const newUser = { id, name:nm, city:ct, createdAt: Date.now(), lifetime:0, weekly:0, weekKey:wk, dayCounts:{} };
+          const s = {...store, users:{...store.users, [id]:newUser}, activeUserId:id};
+          setStore(s); saveStore(s); setName(""); setCity("");
+        };
+        const switchUser = (id) => { const s = {...store, activeUserId:id}; setStore(s); saveStore(s); };
+        const deleteUser = (id) => {
+          if(!confirm("Delete this user? Data on this device will be removed.")) return;
+          const s = {...store, users:{...store.users}}; delete s.users[id];
+          if(s.activeUserId===id) s.activeUserId = Object.keys(s.users)[0] || null;
+          setStore(s); saveStore(s);
         };
 
-        const handleDecrement = e => { setCount(c => Math.max(0, c - 1)); };
-        const handleReset108 = e => { setCount(c => c - (c % 108)); };
-        const handleResetAll = e => { if (confirm("Reset all?")) setCount(0); };
+        const usersArr = useMemo(()=> Object.values(store.users||{}), [store.users]);
+        const weeklyBoard = useMemo(()=> [...usersArr].sort((a,b)=>(b.weekly||0)-(a.weekly||0)), [usersArr]);
+        const dayRows = useMemo(()=> active?.dayCounts ? Object.entries(active.dayCounts).sort((a,b)=> a[0]<b[0]?1:-1).slice(0,14) : [], [active]);
 
-        // Keyboard: Space/Enter = +1, Ctrl/⌘Z = -1 (center burst on +1)
         useEffect(() => {
           const onKey = (e) => {
-            if (e.key === " " || e.key === "Enter") {
-              e.preventDefault();
-              setCount(c => c + 1);
-              spawnBurst(window.innerWidth/2, window.innerHeight/2);
-            }
-            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") {
-              setCount(c => Math.max(0, c - 1));
-            }
+            if (e.key === " " || e.key === "Enter") { e.preventDefault(); handleInc(window.innerWidth/2, window.innerHeight/2); }
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { handleDec(); }
           };
-          window.addEventListener("keydown", onKey);
-          return () => window.removeEventListener("keydown", onKey);
-        }, []);
+          window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey);
+        }, [active]);
+
+        const noUsers = (usersArr.length===0);
 
         return (
-          <div
-            className="screen"
-            onPointerDown={handlePointerDown}
-            role="application"
-            aria-label="Radha Jaap Counter"
-          >
-            <main className="wrap">
+          <div className="screen" onPointerDown={onScreenPointerDown}>
+            <section className="wrap" aria-label="Counter and Controls">
               <header style={{textAlign:"center"}}>
-                <h1 className="title">राधा</h1>
-                <div className="hint">Tap anywhere to add 1 mantra</div>
+                <h1 className="title" aria-label="Radha">राधा</h1>
+                <p className="hint">Kahin bhi tap karo — 1 mantra add hoga</p>
               </header>
 
-              <div className="ring-wrap" aria-hidden="true" onPointerDown={(e)=>e.stopPropagation()}>
+              <section className="soft-card" onPointerDown={stop} aria-label="Profile">
+                {noUsers ? (
+                  <>
+                    <div className="row" role="group" aria-label="Create profile">
+                      <label className="visually-hidden" htmlFor="name">Name</label>
+                      <input id="name" className="input" autoComplete="name" placeholder="Name" value={name} onChange={e=>setName(e.target.value)} />
+                      <label className="visually-hidden" htmlFor="city">City</label>
+                      <input id="city" className="input" autoComplete="address-level2" placeholder="City" value={city} onChange={e=>setCity(e.target.value)} />
+                      <button onPointerDown={stop} onClick={addUser}>Create Profile</button>
+                    </div>
+                    <div className="footer">Har device par alag profiles save hoti hain (offline).</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="row" style={{justifyContent:"space-between"}}>
+                      <div className="row" style={{justifyContent:"flex-start"}}>
+                        <span className="pill" aria-hidden="true">Active:</span>
+                        <label className="visually-hidden" htmlFor="activeUser">Active user</label>
+                        <select id="activeUser" className="input" value={store.activeUserId||""} onChange={e=>switchUser(e.target.value)} style={{minWidth:200}}>
+                          {usersArr.map(u=>(
+                            <option key={u.id} value={u.id}>{u.name}{u.city?` • ${u.city}`:""}</option>
+                          ))}
+                        </select>
+                      </div>
+                      {active && <button onPointerDown={stop} onClick={()=>deleteUser(active.id)} aria-label="Delete active user">Delete</button>}
+                    </div>
+                    {!active && <div className="footer">Please select a user above.</div>}
+                  </>
+                )}
+              </section>
+
+              <div className="ring-wrap" aria-hidden="true">
                 <svg viewBox={`0 0 ${size} ${size}`}>
                   <circle cx={size/2} cy={size/2} r={r} stroke="var(--ring-bg)" strokeWidth={stroke} fill="none" />
                   <circle
@@ -257,28 +398,67 @@
                 </svg>
               </div>
 
-              <section
-                className="stats soft-card"
-                onPointerDown={(e)=>e.stopPropagation()}
-                aria-live="polite"
-              >
-                <div className="big">{bead} / 108</div>
-                <div>Round: {rounds}</div>
-                <div>Total: {count}</div>
-                <div className="footer">Space/Enter = +1 • Ctrl/⌘Z = -1</div>
+              <section className="stats soft-card" aria-live="polite">
+                {active ? (
+                  <>
+                    <div className="big" aria-label={`Bead ${bead} of 108`}>{bead} / 108</div>
+                    <div>Round: {rounds}</div>
+                    <div>Total: {active.lifetime}</div>
+                    <div>This Week: {active.weekly} <span className="footer">Auto reset every Monday</span></div>
+                  </>
+                ) : (<div>Please create/select a user to start.</div>)}
               </section>
 
-              <div className="controls" onPointerDown={(e)=>e.stopPropagation()}>
-                <button onClick={handleDecrement} aria-label="Decrement by 1">-1</button>
-                <button onClick={handleReset108}>Reset to multiple of 108</button>
-                <button onClick={handleResetAll}>Reset All</button>
+              <div className="controls" onPointerDown={e=>e.stopPropagation()} role="group" aria-label="Controls">
+                <button onClick={handleDec} aria-label="Decrement by 1">-1</button>
+                <button onClick={resetToMultiple108}>Reset to multiple of 108</button>
+                <button onClick={resetAllForActive}>Reset User</button>
               </div>
-            </main>
+
+              {active && (
+                <section className="soft-card" onPointerDown={e=>e.stopPropagation()} aria-label="History (Last 14 days)">
+                  <div className="row" style={{justifyContent:"space-between"}}>
+                    <strong>Last 14 days</strong>
+                    <span className="pill">{active.name}{active.city?` • ${active.city}`:""}</span>
+                  </div>
+                  {Object.keys(active.dayCounts||{}).length ? (
+                    <table className="table" role="table" aria-label="Daily history">
+                      <thead><tr><th scope="col">Date</th><th scope="col">Count</th></tr></thead>
+                      <tbody>
+                        {Object.entries(active.dayCounts).sort((a,b)=> a[0]<b[0]?1:-1).slice(0,14).map(([d,c])=>(
+                          <tr key={d}><td>{d}</td><td>{c}</td></tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : <div className="footer">No history yet — tap to begin.</div>}
+                </section>
+              )}
+
+              {Object.values(store.users||{}).length>1 && (
+                <section className="soft-card" onPointerDown={e=>e.stopPropagation()} aria-label="Weekly leaderboard (this device)">
+                  <div className="row" style={{justifyContent:"space-between"}}>
+                    <strong>Weekly Leaderboard</strong>
+                    <span className="pill">{weekKeyOf(new Date())}</span>
+                  </div>
+                  <table className="table" role="table">
+                    <thead><tr><th>#</th><th>User</th><th>City</th><th>Jaap (week)</th></tr></thead>
+                    <tbody>
+                      {[...Object.values(store.users)].sort((a,b)=>(b.weekly||0)-(a.weekly||0)).map((u,i)=>(
+                        <tr key={u.id}><td>{i+1}</td><td>{u.name}</td><td>{u.city||"-"}</td><td>{u.weekly||0}</td></tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div className="footer">Note: Ye leaderboard sirf is device par stored users ke liye hai (global nahi).</div>
+                </section>
+              )}
+
+              <p className="footer">Space/Enter = +1 • Ctrl/⌘Z = -1 • Haptics on mobile</p>
+            </section>
           </div>
         );
       }
 
-      ReactDOM.createRoot(document.getElementById("root")).render(<RadhaJaapCounter />);
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
     </script>
 
     <!-- UPI support button -->
@@ -287,6 +467,14 @@
       href="upi://pay?pa=ankitgupta1181-5@oksbi&pn=Radha%20Jaap%20Counter&tn=Dhanyavaad%20🙏&cu=INR"
       title="Support via UPI"
       aria-label="Support via UPI"
+      rel="nofollow"
     >❤️ UPI</a>
+
+    <!-- Optional: register SW when you add /sw.js -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        // navigator.serviceWorker.register('/sw.js'); // uncomment after you add the file
+      }
+    </script>
   </body>
 </html>
