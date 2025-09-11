@@ -2,10 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Radha Jaap Counter — Tap Anywhere to Count Mantras</title>
-    <meta name="description" content="Mobile-friendly Radha Jaap counter. Tap anywhere to add 1 mantra, track rounds (108), create your profile (name & city), see daily history and weekly leaderboard." />
+    <title>Radha Naam Jaap Counter — तेज़, मोबाइल-फ्रेंडली | NaamJaa</title>
+    <meta name="description" content="Radha Naam Jaap counter — Tap anywhere to add 1 mantra, track rounds (108), create profile, view daily history & weekly leaderboard. Fast, offline friendly." />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="canonical" href="https://naamjaa.netlify.app//radha-jaap/" />
+    <link rel="canonical" href="https://naamjaa.netlify.app/radha-jaap/" />
+    <meta name="robots" content="index, follow" />
+    <link rel="sitemap" href="/sitemap.xml" />
+
+    <!-- dataLayer helper: place BEFORE the GTM script so early events are captured -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtmEvent(name, params = {}) {
+        try {
+          window.dataLayer.push(Object.assign({ event: name }, params));
+        } catch (e) { /* ignore */ }
+      }
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PS452RRD');</script>
+    <!-- End Google Tag Manager -->
 
     <!-- PWA / Theming -->
     <meta name="theme-color" content="#f3722c" />
@@ -15,31 +35,34 @@
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Radha Jaap Counter">
-    <meta property="og:description" content="Tap anywhere to count mantras. Profiles, daily history, and weekly leaderboard.">
-    <meta property="og:url" content="https://naamjaa.netlify.app//radha-jaap/">
-    <meta property="og:image" content="https://example.com/og/radha-jaap-1200x630.png">
+    <meta property="og:title" content="Radha Naam Jaap Counter — NaamJaa">
+    <meta property="og:description" content="Tap anywhere to count mantras. Track 108, create profile, view history & leaderboard. Mobile friendly and offline capable.">
+    <meta property="og:url" content="https://naamjaa.netlify.app/radha-jaap/">
+    <meta property="og:image" content="https://naamjaa.netlify.app/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Radha Jaap Counter">
-    <meta name="twitter:description" content="Mobile-friendly counter with 108-round ring and weekly leaderboard.">
-    <meta name="twitter:image" content="https://example.com/og/radha-jaap-1200x630.png">
+    <meta name="twitter:title" content="Radha Naam Jaap Counter — NaamJaa">
+    <meta name="twitter:description" content="Tap anywhere to count mantras. Track 108, create profile & view leaderboard.">
+    <meta name="twitter:image" content="https://naamjaa.netlify.app/og-image.png">
 
-    <!-- Preconnect for faster CDN fetch -->
+    <!-- Preconnect -->
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="dns-prefetch" href="//unpkg.com">
 
-    <!-- React + Babel via CDN (Note: for production, remove Babel and ship prebuilt JS) -->
+    <!-- NOTE: For production, remove Babel and ship prebuilt JS bundle.
+         Keep React+ReactDOM production builds via CDN or use your build pipeline. -->
     <script defer crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script defer crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script defer crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
+      /* (Your original CSS kept mostly unchanged) */
       :root{
         --bg-start:#f9c74f; --bg-end:#f3722c; --fg:#2d1b00; --title:#f94144; --hint:#fef9c3; --ring-bg:rgba(255,255,255,.3);
-        --pad:16px;
-        --safe-top: max(var(--pad), env(safe-area-inset-top));
+        --pad:16px; --safe-top: max(var(--pad), env(safe-area-inset-top));
         --safe-right: max(var(--pad), env(safe-area-inset-right));
         --safe-bottom: max(var(--pad), env(safe-area-inset-bottom));
         --safe-left: max(var(--pad), env(safe-area-inset-left));
@@ -56,151 +79,97 @@
       }
       a:focus, button:focus, input:focus, select:focus{ outline:2px solid var(--focus); outline-offset:2px; }
 
-      .screen{
-        min-height:100dvh; width:100%;
-        display:flex; align-items:center; justify-content:center;
-        overflow:hidden;
-        padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
-        position:relative;
-        touch-action: manipulation;
-      }
-      .wrap{
-        display:flex; flex-direction:column; align-items:center; gap:16px;
-        max-width:720px; width:100%;
-      }
-      .title{
-        text-align:center; margin:0; font-weight:900;
-        font-size: clamp(32px, 8vw, 64px);
-        letter-spacing:1px; color:var(--title);
-        text-shadow:0 2px 10px rgba(0,0,0,.15);
-      }
-      .hint{
-        text-align:center; margin-top:6px; color:var(--hint);
-        font-size: clamp(14px, 3.5vw, 18px); opacity:.95;
-      }
+      .screen{ min-height:100dvh; width:100%; display:flex; align-items:center; justify-content:center; overflow:hidden;
+        padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); position:relative; touch-action: manipulation; }
+      .wrap{ display:flex; flex-direction:column; align-items:center; gap:16px; max-width:720px; width:100%; }
+      .title{ text-align:center; margin:0; font-weight:900; font-size: clamp(32px, 8vw, 64px); letter-spacing:1px; color:var(--title); text-shadow:0 2px 10px rgba(0,0,0,.15); }
+      .hint{ text-align:center; margin-top:6px; color:var(--hint); font-size: clamp(14px, 3.5vw, 18px); opacity:.95; }
       .stats{ text-align:center; line-height:1.25; }
       .big{ font-size: clamp(28px, 9vw, 56px); font-weight:800; color:#fff7e0; }
-
-      .soft-card{
-        background: rgba(255,255,255,.15);
-        backdrop-filter: blur(8px);
-        border:1px solid rgba(255,255,255,.3);
-        border-radius:20px;
-        padding: 14px 18px;
-        box-shadow:0 10px 24px rgba(0,0,0,.15);
-        color:var(--hint);
-        width:min(92vw, 560px);
-      }
-
-      .controls{
-        display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
-        width:min(92vw, 560px);
-      }
-      button{
-        appearance:none; border:none; border-radius:999px;
-        padding:14px 20px; min-height:52px;
-        font-weight:800; font-size: clamp(14px, 4vw, 16px);
-        cursor:pointer;
-        background: rgba(255,255,255,.9); color:var(--fg);
-        box-shadow:0 8px 18px rgba(0,0,0,.15);
-        transition: transform .15s ease, filter .15s ease;
-      }
-      @media (hover:hover){ button:hover{ filter:brightness(1.05); } }
-      button:active{ transform: translateY(1px); }
+      .soft-card{ background: rgba(255,255,255,.15); backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,.3); border-radius:20px; padding: 14px 18px; box-shadow:0 10px 24px rgba(0,0,0,.15); color:var(--hint); width:min(92vw, 560px); }
+      .controls{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:min(92vw, 560px); }
+      button{ appearance:none; border:none; border-radius:999px; padding:14px 20px; min-height:52px; font-weight:800; font-size: clamp(14px, 4vw, 16px); cursor:pointer; background: rgba(255,255,255,.9); color:var(--fg); box-shadow:0 8px 18px rgba(0,0,0,.15); transition: transform .15s ease, filter .15s ease; }
+      @media (hover:hover){ button:hover{ filter:brightness(1.05); } } button:active{ transform: translateY(1px); }
       .footer{ font-size:12px; opacity:.85; margin-top:6px; color:#fffde8 }
-
-      .ring-wrap{
-        width: min(84vw, 420px);
-        aspect-ratio: 1 / 1;
-        display:grid; place-items:center;
-      }
+      .ring-wrap{ width: min(84vw, 420px); aspect-ratio: 1 / 1; display:grid; place-items:center; }
       .ring-wrap svg{ width:100%; height:100%; display:block; }
-
-      .bursts{ position:fixed; inset:0; pointer-events:none; z-index:10; overflow:hidden; }
-      .burst{
-        position:absolute; left:0; top:0;
-        transform: translate(-50%, -50%) scale(.85);
-        font-weight:900; font-size: clamp(36px, 10vw, 120px); line-height:1;
-        color:#fff6dc;
-        text-shadow: 0 0 8px rgba(255,244,200,.9), 0 0 22px rgba(249,137,30,.7), 0 0 46px rgba(249,65,68,.55);
-        opacity:0; animation: burst 900ms ease-out forwards;
-        will-change: transform, opacity;
-      }
-      @keyframes burst{
-        0%{opacity:1; transform:translate(-50%,-50%) scale(.9);}
-        70%{opacity:1; transform:translate(-50%,-50%) scale(1.08);}
-        100%{opacity:0; transform:translate(-50%,-50%) scale(1.22);}
-      }
-      @media (prefers-reduced-motion: reduce){
-        .burst{ animation-duration: 300ms; }
-        button{ transition: none; }
-      }
-
+      .burst{ position:absolute; left:0; top:0; transform: translate(-50%, -50%) scale(.85); font-weight:900; font-size: clamp(36px, 10vw, 120px); line-height:1; color:#fff6dc; text-shadow: 0 0 8px rgba(255,244,200,.9), 0 0 22px rgba(249,137,30,.7), 0 0 46px rgba(249,65,68,.55); opacity:0; animation: burst 900ms ease-out forwards; will-change: transform, opacity; pointer-events:none; }
+      @keyframes burst{ 0%{opacity:1; transform:translate(-50%,-50%) scale(.9);} 70%{opacity:1; transform:translate(-50%,-50%) scale(1.08);} 100%{opacity:0; transform:translate(-50%,-50%) scale(1.22);} }
+      @media (prefers-reduced-motion: reduce){ .burst{ animation-duration: 300ms; } button{ transition: none; } }
       .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; }
-      .input{
-        background: rgba(255,255,255,.92);
-        border:1px solid rgba(0,0,0,.08);
-        border-radius:14px;
-        padding:12px 14px; min-height:48px;
-        font-size:16px; outline:none;
-        box-shadow:0 6px 14px rgba(0,0,0,.08) inset;
-      }
-      .table{
-        width:100%; border-collapse:separate; border-spacing:0 8px; color:#fffef4;
-        font-size:14px;
-      }
-      .table th{ text-align:left; opacity:.9; }
-      .table td, .table th{ padding:8px 10px; }
-      .pill{
-        display:inline-block; background:rgba(255,255,255,.18); padding:4px 10px; border-radius:999px; font-weight:700;
-      }
-
-      /* Floating UPI button */
-      .upi-fab{
-        position:fixed; right:16px;
-        bottom: calc(16px + env(safe-area-inset-bottom));
-        z-index:999;
-        background:#ffffffcc; color:#2d1b00; border-radius:999px;
-        padding:12px 16px; font-weight:800; text-decoration:none;
-        box-shadow:0 10px 24px rgba(0,0,0,.18);
-        backdrop-filter: blur(6px);
-      }
-      .upi-fab:active{ transform:translateY(1px) }
+      .input{ background: rgba(255,255,255,.92); border:1px solid rgba(0,0,0,.08); border-radius:14px; padding:12px 14px; min-height:48px; font-size:16px; outline:none; box-shadow:0 6px 14px rgba(0,0,0,.08) inset; }
+      .table{ width:100%; border-collapse:separate; border-spacing:0 8px; color:#fffef4; font-size:14px; }
+      .table th{ text-align:left; opacity:.9; } .table td, .table th{ padding:8px 10px; } .pill{ display:inline-block; background:rgba(255,255,255,.18); padding:4px 10px; border-radius:999px; font-weight:700; }
+      .upi-fab{ position:fixed; right:16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index:999; background:#ffffffcc; color:#2d1b00; border-radius:999px; padding:12px 16px; font-weight:800; text-decoration:none; box-shadow:0 10px 24px rgba(0,0,0,.18); backdrop-filter: blur(6px); }
       .visually-hidden{ position:absolute!important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap; }
+      .hero-cta{ display:inline-block; margin-top:10px; padding:12px 18px; border-radius:12px; background:#fff; color:var(--fg); font-weight:800; text-decoration:none; }
     </style>
 
-    <!-- Structured Data -->
+    <!-- Structured Data: WebSite + WebApplication + FAQ -->
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Radha Jaap Counter",
-      "applicationCategory": "UtilityApplication",
-      "operatingSystem": "Web",
-      "url": "https://naamjaa.netlify.app//radha-jaaphttps://naamjaa.netlify.app//",
-      "description": "Tap anywhere to add 1 mantra, track 108-bead rounds, profiles with name & city, daily history, and weekly leaderboard.",
-      "inLanguage": "en",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Radha Jaap",
-        "url": "https://naamjaa.netlify.app/"
-      }
+      "@context":"https://schema.org",
+      "@graph":[
+        {
+          "@type":"WebSite",
+          "@id":"https://naamjaa.netlify.app/#website",
+          "url":"https://naamjaa.netlify.app/",
+          "name":"NaamJaa",
+          "description":"Radha Naam Jaap counter — Tap anywhere to add a mantra, track 108 rounds, create profile and view leaderboard.",
+          "potentialAction": {
+            "@type":"SearchAction",
+            "target":"https://naamjaa.netlify.app/radha-jaap/?q={search_term_string}",
+            "query-input":"required name=search_term_string"
+          }
+        },
+        {
+          "@type":"WebApplication",
+          "@id":"https://naamjaa.netlify.app/#app",
+          "name":"Radha Jaap Counter",
+          "url":"https://naamjaa.netlify.app/radha-jaap/",
+          "applicationCategory":"UtilityApplication",
+          "operatingSystem":"Web",
+          "description":"Simple Radha naam jaap counter — mobile friendly and offline capable."
+        },
+        {
+          "@type":"FAQPage",
+          "@id":"https://naamjaa.netlify.app/radha-jaap/#faq",
+          "mainEntity":[
+            {"@type":"Question","name":"How do I count mantras?","acceptedAnswer":{"@type":"Answer","text":"Tap anywhere on the screen (or press Space/Enter) to add +1 mantra. Use the controls to reset or decrement."}},
+            {"@type":"Question","name":"Is data saved?","acceptedAnswer":{"@type":"Answer","text":"Data is stored locally on your device (offline). Profiles are device-specific."}},
+            {"@type":"Question","name":"Can I support the developer?","acceptedAnswer":{"@type":"Answer","text":"Yes — click the UPI button to donate. The app is free to use."}}
+          ]
+        }
+      ]
     }
     </script>
+
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PS452RRD"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <a class="visually-hidden" href="#main-content">Skip to main content</a>
+
     <div id="bursts" class="bursts" aria-hidden="true"></div>
 
-    <main id="root" role="main" aria-label="Radha Jaap Counter App">
+    <!-- Provide crawlable content for search engines (and users without JS) -->
+    <main id="main-content" role="main" aria-label="Radha Jaap Counter App">
       <noscript>
-        <div style="max-width:720px;margin:24px auto;padding:16px;background:#fff3;border-radius:12px">
-          <h1>Radha Jaap Counter</h1>
-          <p>This app needs JavaScript enabled. Tap anywhere to add mantras, track 108-bead rounds, and see your weekly leaderboard.</p>
+        <div style="max-width:720px;margin:24px auto;padding:16px;background:#fff3;border-radius:12px;color:#2d1b00">
+          <h1>Radha Naam Jaap Counter</h1>
+          <p>Tap anywhere to add 1 mantra. Track rounds (108), create offline profiles, view daily history and a weekly leaderboard (device-only).</p>
+          <p><strong>Quick Start:</strong> Tap / Click the button below to simulate starting the counter.</p>
+          <a class="hero-cta" href="#radha-cta" onclick="alert('JavaScript required to run the live counter — please enable JS')">Start Jaap (enable JS)</a>
         </div>
       </noscript>
+
+      <div id="root" aria-hidden="false"></div>
     </main>
 
+    <!-- Inline app (modified to call gtmEvent) -->
     <script type="text/babel">
       const { useEffect, useMemo, useState } = React;
       const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
@@ -215,6 +184,14 @@
       const LS_KEY = "rjc_store_v2";
       const loadStore = () => { try{ return JSON.parse(localStorage.getItem(LS_KEY)) ?? {}; }catch{ return {}; } };
       const saveStore = (s) => localStorage.setItem(LS_KEY, JSON.stringify(s));
+
+      // Ensure gtmEvent exists (redundant safe-guard)
+      if (!window.dataLayer) window.dataLayer = [];
+      if (typeof window.gtmEvent !== 'function') {
+        window.gtmEvent = function(name, params = {}) {
+          try { window.dataLayer.push(Object.assign({ event: name }, params)); } catch(e){}
+        };
+      }
 
       function App(){
         const [size, setSize] = useState(() => clamp(Math.floor(window.innerWidth * 0.84), 220, 420));
@@ -262,15 +239,35 @@
             const newU = mutator(u); s.users[uid] = newU; saveStore(s); return s;
           });
         };
+
+        // handle increment: also send analytics events
         const handleInc = (x, y) => {
           if(!active) return;
+          const predictedTotal = (active?.lifetime ?? 0) + 1;
+
           updateUser(store.activeUserId, (u) => {
             const now = new Date(); const wk = weekKeyOf(now); const today = fmtDate(now);
             const dayCounts = {...(u.dayCounts||{})}; dayCounts[today] = (dayCounts[today]||0)+1;
             return {...u, lifetime:u.lifetime+1, weekly:(u.weekKey===wk?u.weekly:0)+1, weekKey:wk, dayCounts};
           });
+
+          // Analytics events
+          gtmEvent('increment', {
+            user_id: store.activeUserId || null,
+            total: predictedTotal,
+            method: 'tap'
+          });
+
+          if (predictedTotal % 108 === 0) {
+            gtmEvent('complete_108', {
+              user_id: store.activeUserId || null,
+              rounds: Math.floor(predictedTotal / 108)
+            });
+          }
+
           vibrate(8); spawnBurst(x,y);
         };
+
         const handleDec = () => {
           if(!active) return;
           updateUser(store.activeUserId, (u) => {
@@ -278,19 +275,25 @@
             if(u.lifetime>0){ if((dayCounts[today]||0)>0) dayCounts[today]-=1; return {...u, lifetime:u.lifetime-1, weekly:Math.max(0,u.weekly-1), dayCounts}; }
             return u;
           });
+          // track decrement (optional)
+          gtmEvent('decrement', { user_id: store.activeUserId || null });
           vibrate(6);
         };
+
         const resetToMultiple108 = () => {
           if(!active) return;
           updateUser(store.activeUserId, (u) => {
             const diff = u.lifetime % 108; if(diff===0) return u;
             return {...u, lifetime:u.lifetime-diff, weekly:Math.max(0,(u.weekly||0)-diff)};
           });
+          gtmEvent('reset_to_multiple_108', { user_id: store.activeUserId || null });
         };
+
         const resetAllForActive = () => {
           if(!active) return;
           if(confirm("Reset this user's counts? (lifetime, weekly & day history)")){
             updateUser(store.activeUserId, (u)=> ({...u, lifetime:0, weekly:0, dayCounts:{}}));
+            gtmEvent('reset_user', { user_id: store.activeUserId || null });
           }
         };
 
@@ -312,13 +315,25 @@
           const newUser = { id, name:nm, city:ct, createdAt: Date.now(), lifetime:0, weekly:0, weekKey:wk, dayCounts:{} };
           const s = {...store, users:{...store.users, [id]:newUser}, activeUserId:id};
           setStore(s); saveStore(s); setName(""); setCity("");
+          // set global small var for UPI/donate clicks
+          window.__rjc_activeUser = id;
+          // analytics
+          gtmEvent('create_profile', { user_id: id, name_length: nm.length });
         };
-        const switchUser = (id) => { const s = {...store, activeUserId:id}; setStore(s); saveStore(s); };
+
+        const switchUser = (id) => {
+          const s = {...store, activeUserId:id}; setStore(s); saveStore(s);
+          window.__rjc_activeUser = id;
+          gtmEvent('switch_user', { user_id: id });
+        };
+
         const deleteUser = (id) => {
           if(!confirm("Delete this user? Data on this device will be removed.")) return;
           const s = {...store, users:{...store.users}}; delete s.users[id];
           if(s.activeUserId===id) s.activeUserId = Object.keys(s.users)[0] || null;
           setStore(s); saveStore(s);
+          gtmEvent('delete_profile', { user_id: id });
+          if (s.activeUserId) window.__rjc_activeUser = s.activeUserId; else window.__rjc_activeUser = null;
         };
 
         const usersArr = useMemo(()=> Object.values(store.users||{}), [store.users]);
@@ -461,19 +476,20 @@
       ReactDOM.createRoot(document.getElementById("root")).render(<App />);
     </script>
 
-    <!-- UPI support button -->
+    <!-- UPI support button (fires donate_click event) -->
     <a
       class="upi-fab"
       href="upi://pay?pa=ankitgupta1181-5@oksbi&pn=Radha%20Jaap%20Counter&tn=Dhanyavaad%20🙏&cu=INR"
       title="Support via UPI"
       aria-label="Support via UPI"
       rel="nofollow"
+      onclick="gtmEvent('donate_click', { user_id: window.__rjc_activeUser || null });"
     >❤️ UPI</a>
 
-    <!-- Optional: register SW when you add /sw.js -->
+    <!-- Service worker hint -->
     <script>
       if ('serviceWorker' in navigator) {
-        // navigator.serviceWorker.register('/sw.js'); // uncomment after you add the file
+        // navigator.serviceWorker.register('/sw.js'); // enable after adding sw.js
       }
     </script>
   </body>
