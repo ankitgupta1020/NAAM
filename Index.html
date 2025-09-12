@@ -1,434 +1,496 @@
 <!doctype html>
-<html lang="hi">
-<head>
-  <meta charset="utf-8" />
-  <title>NaamJaa — Radha Naam Jaap Counter (Polished + GTM)</title>
-  <meta name="description" content="Radha Naam Jaap counter — Tap anywhere to add 1 mantra, track rounds (108), create profile, view daily history & weekly leaderboard. Mobile friendly and offline capable." />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#f3722c">
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Radha Naam Jaap Counter — तेज़, मोबाइल-फ्रेंडली | NaamJaa</title>
+    <meta name="description" content="Radha Naam Jaap counter — Tap anywhere to add 1 mantra, track rounds (108), create profile, view daily history & weekly leaderboard. Fast, offline friendly." />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="canonical" href="https://naamjaa.netlify.app/radha-jaap/" />
+    <meta name="robots" content="index, follow" />
+    <link rel="sitemap" href="/sitemap.xml" />
 
-  <!-- Google Tag Manager (head) -->
-  <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-PS452RRD');
-  </script>
-  <!-- End GTM -->
+    <!-- dataLayer helper: place BEFORE the GTM script so early events are captured -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtmEvent(name, params = {}) {
+        try {
+          window.dataLayer.push(Object.assign({ event: name }, params));
+        } catch (e) { /* ignore */ }
+      }
+    </script>
 
-  <style>
-    :root{
-      --bg1:#fff6d6; --bg2:#f3722c; --accent1:#f8961e; --accent2:#f94144;
-      --glass: rgba(255,255,255,0.12); --glass-border: rgba(255,255,255,0.18);
-      --muted:#2d1b00; --soft:#fffaf0; --pad:16px; --ring-bg: rgba(255,255,255,0.12);
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PS452RRD');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- PWA / Theming -->
+    <meta name="theme-color" content="#f3722c" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/icons/icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Radha Naam Jaap Counter — NaamJaa">
+    <meta property="og:description" content="Tap anywhere to count mantras. Track 108, create profile, view history & leaderboard. Mobile friendly and offline capable.">
+    <meta property="og:url" content="https://naamjaa.netlify.app/radha-jaap/">
+    <meta property="og:image" content="https://naamjaa.netlify.app/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Radha Naam Jaap Counter — NaamJaa">
+    <meta name="twitter:description" content="Tap anywhere to count mantras. Track 108, create profile & view leaderboard.">
+    <meta name="twitter:image" content="https://naamjaa.netlify.app/og-image.png">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="dns-prefetch" href="//unpkg.com">
+
+    <!-- NOTE: For production, remove Babel and ship prebuilt JS bundle.
+         Keep React+ReactDOM production builds via CDN or use your build pipeline. -->
+    <script defer crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script defer crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script defer crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      /* (Your original CSS kept mostly unchanged) */
+      :root{
+        --bg-start:#f9c74f; --bg-end:#f3722c; --fg:#2d1b00; --title:#f94144; --hint:#fef9c3; --ring-bg:rgba(255,255,255,.3);
+        --pad:16px; --safe-top: max(var(--pad), env(safe-area-inset-top));
+        --safe-right: max(var(--pad), env(safe-area-inset-right));
+        --safe-bottom: max(var(--pad), env(safe-area-inset-bottom));
+        --safe-left: max(var(--pad), env(safe-area-inset-left));
+        --focus: #1f2937;
+      }
+      *{ box-sizing:border-box; }
+      html,body{ height:100%; margin:0; }
+      body{
+        font-family:"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background: radial-gradient(circle at top, var(--bg-start), var(--bg-end));
+        color:var(--fg);
+        user-select:none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      a:focus, button:focus, input:focus, select:focus{ outline:2px solid var(--focus); outline-offset:2px; }
+
+      .screen{ min-height:100dvh; width:100%; display:flex; align-items:center; justify-content:center; overflow:hidden;
+        padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); position:relative; touch-action: manipulation; }
+      .wrap{ display:flex; flex-direction:column; align-items:center; gap:16px; max-width:720px; width:100%; }
+      .title{ text-align:center; margin:0; font-weight:900; font-size: clamp(32px, 8vw, 64px); letter-spacing:1px; color:var(--title); text-shadow:0 2px 10px rgba(0,0,0,.15); }
+      .hint{ text-align:center; margin-top:6px; color:var(--hint); font-size: clamp(14px, 3.5vw, 18px); opacity:.95; }
+      .stats{ text-align:center; line-height:1.25; }
+      .big{ font-size: clamp(28px, 9vw, 56px); font-weight:800; color:#fff7e0; }
+      .soft-card{ background: rgba(255,255,255,.15); backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,.3); border-radius:20px; padding: 14px 18px; box-shadow:0 10px 24px rgba(0,0,0,.15); color:var(--hint); width:min(92vw, 560px); }
+      .controls{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:min(92vw, 560px); }
+      button{ appearance:none; border:none; border-radius:999px; padding:14px 20px; min-height:52px; font-weight:800; font-size: clamp(14px, 4vw, 16px); cursor:pointer; background: rgba(255,255,255,.9); color:var(--fg); box-shadow:0 8px 18px rgba(0,0,0,.15); transition: transform .15s ease, filter .15s ease; }
+      @media (hover:hover){ button:hover{ filter:brightness(1.05); } } button:active{ transform: translateY(1px); }
+      .footer{ font-size:12px; opacity:.85; margin-top:6px; color:#fffde8 }
+      .ring-wrap{ width: min(84vw, 420px); aspect-ratio: 1 / 1; display:grid; place-items:center; }
+      .ring-wrap svg{ width:100%; height:100%; display:block; }
+      .burst{ position:absolute; left:0; top:0; transform: translate(-50%, -50%) scale(.85); font-weight:900; font-size: clamp(36px, 10vw, 120px); line-height:1; color:#fff6dc; text-shadow: 0 0 8px rgba(255,244,200,.9), 0 0 22px rgba(249,137,30,.7), 0 0 46px rgba(249,65,68,.55); opacity:0; animation: burst 900ms ease-out forwards; will-change: transform, opacity; pointer-events:none; }
+      @keyframes burst{ 0%{opacity:1; transform:translate(-50%,-50%) scale(.9);} 70%{opacity:1; transform:translate(-50%,-50%) scale(1.08);} 100%{opacity:0; transform:translate(-50%,-50%) scale(1.22);} }
+      @media (prefers-reduced-motion: reduce){ .burst{ animation-duration: 300ms; } button{ transition: none; } }
+      .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; }
+      .input{ background: rgba(255,255,255,.92); border:1px solid rgba(0,0,0,.08); border-radius:14px; padding:12px 14px; min-height:48px; font-size:16px; outline:none; box-shadow:0 6px 14px rgba(0,0,0,.08) inset; }
+      .table{ width:100%; border-collapse:separate; border-spacing:0 8px; color:#fffef4; font-size:14px; }
+      .table th{ text-align:left; opacity:.9; } .table td, .table th{ padding:8px 10px; } .pill{ display:inline-block; background:rgba(255,255,255,.18); padding:4px 10px; border-radius:999px; font-weight:700; }
+      .upi-fab{ position:fixed; right:16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index:999; background:#ffffffcc; color:#2d1b00; border-radius:999px; padding:12px 16px; font-weight:800; text-decoration:none; box-shadow:0 10px 24px rgba(0,0,0,.18); backdrop-filter: blur(6px); }
+      .visually-hidden{ position:absolute!important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap; }
+      .hero-cta{ display:inline-block; margin-top:10px; padding:12px 18px; border-radius:12px; background:#fff; color:var(--fg); font-weight:800; text-decoration:none; }
+    </style>
+
+    <!-- Structured Data: WebSite + WebApplication + FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@graph":[
+        {
+          "@type":"WebSite",
+          "@id":"https://naamjaa.netlify.app/#website",
+          "url":"https://naamjaa.netlify.app/",
+          "name":"NaamJaa",
+          "description":"Radha Naam Jaap counter — Tap anywhere to add a mantra, track 108 rounds, create profile and view leaderboard.",
+          "potentialAction": {
+            "@type":"SearchAction",
+            "target":"https://naamjaa.netlify.app/radha-jaap/?q={search_term_string}",
+            "query-input":"required name=search_term_string"
+          }
+        },
+        {
+          "@type":"WebApplication",
+          "@id":"https://naamjaa.netlify.app/#app",
+          "name":"Radha Jaap Counter",
+          "url":"https://naamjaa.netlify.app/radha-jaap/",
+          "applicationCategory":"UtilityApplication",
+          "operatingSystem":"Web",
+          "description":"Simple Radha naam jaap counter — mobile friendly and offline capable."
+        },
+        {
+          "@type":"FAQPage",
+          "@id":"https://naamjaa.netlify.app/radha-jaap/#faq",
+          "mainEntity":[
+            {"@type":"Question","name":"How do I count mantras?","acceptedAnswer":{"@type":"Answer","text":"Tap anywhere on the screen (or press Space/Enter) to add +1 mantra. Use the controls to reset or decrement."}},
+            {"@type":"Question","name":"Is data saved?","acceptedAnswer":{"@type":"Answer","text":"Data is stored locally on your device (offline). Profiles are device-specific."}},
+            {"@type":"Question","name":"Can I support the developer?","acceptedAnswer":{"@type":"Answer","text":"Yes — click the UPI button to donate. The app is free to use."}}
+          ]
+        }
+      ]
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial}
-    body{
-      background:
-        radial-gradient(800px 400px at 10% 10%, rgba(249,199,59,0.12), transparent 10%),
-        radial-gradient(600px 300px at 90% 90%, rgba(249,65,68,0.08), transparent 10%),
-        linear-gradient(180deg,var(--bg1),var(--bg2));
-      color:var(--muted);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      -webkit-tap-highlight-color: transparent;
-      padding:calc(var(--pad) + env(safe-area-inset-top)) calc(var(--pad) + env(safe-area-inset-right)) calc(var(--pad) + env(safe-area-inset-bottom)) calc(var(--pad) + env(safe-area-inset-left));
-      display:flex;align-items:center;justify-content:center;
-    }
+    </script>
 
-    /* Layout */
-    .app{width:100%;max-width:1100px;display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
-    @media(max-width:940px){ .app{grid-template-columns:1fr;padding:0 12px} }
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PS452RRD"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
-    /* Hero / Title */
-    .hero{grid-column:1/-1;text-align:center;margin-bottom:6px}
-    .title{
-      margin:0;font-weight:900;font-size:clamp(26px,6.5vw,48px);line-height:1;
-      background:linear-gradient(90deg,var(--accent1),var(--accent2));
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-      text-shadow:0 10px 30px rgba(249,65,68,0.08);display:inline-block;
-    }
-    .sub{margin-top:6px;color:rgba(255,250,240,0.92);font-weight:700;font-size:14px}
+    <a class="visually-hidden" href="#main-content">Skip to main content</a>
 
-    /* Cards */
-    .card{background:var(--glass);border-radius:16px;padding:14px;border:1px solid var(--glass-border);backdrop-filter: blur(8px);box-shadow:0 12px 32px rgba(0,0,0,0.12);color:var(--soft)}
-    .small{font-size:13px;color:rgba(255,255,255,0.9)}
+    <div id="bursts" class="bursts" aria-hidden="true"></div>
 
-    /* Ring */
-    .ring-wrap{width:min(540px,84vw);aspect-ratio:1/1;display:grid;place-items:center;position:relative;margin:0 auto}
-    svg.ring{width:100%;height:100%;display:block}
-    .center{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
-    .count{font-weight:900;font-size:clamp(24px,6.5vw,46px);color:#fff7e0;text-shadow:0 8px 26px rgba(0,0,0,0.18)}
-    .rounds{font-size:13px;color:rgba(255,255,255,0.92);margin-top:6px}
+    <!-- Provide crawlable content for search engines (and users without JS) -->
+    <main id="main-content" role="main" aria-label="Radha Jaap Counter App">
+      <noscript>
+        <div style="max-width:720px;margin:24px auto;padding:16px;background:#fff3;border-radius:12px;color:#2d1b00">
+          <h1>Radha Naam Jaap Counter</h1>
+          <p>Tap anywhere to add 1 mantra. Track rounds (108), create offline profiles, view daily history and a weekly leaderboard (device-only).</p>
+          <p><strong>Quick Start:</strong> Tap / Click the button below to simulate starting the counter.</p>
+          <a class="hero-cta" href="#radha-cta" onclick="alert('JavaScript required to run the live counter — please enable JS')">Start Jaap (enable JS)</a>
+        </div>
+      </noscript>
 
-    /* controls */
-    .controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
-    .btn{background:#fff;border-radius:12px;padding:10px 14px;font-weight:800;border:none;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.12);color:var(--muted)}
-    .btn.ghost{background:transparent;color:var(--soft);border:1px solid rgba(255,255,255,0.06)}
-    .btn.warn{background:#ffe6e6;color:var(--muted)}
-    .fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));background:#fff;border-radius:999px;padding:10px 14px;font-weight:800;box-shadow:0 18px 36px rgba(0,0,0,0.22);cursor:pointer}
+      <div id="root" aria-hidden="false"></div>
+    </main>
 
-    /* profile */
-    .profile-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .input{padding:10px;border-radius:10px;border:none;min-width:120px;font-weight:700}
-    .pill{background:rgba(255,255,255,0.08);padding:6px 10px;border-radius:999px;font-weight:800}
+    <!-- Inline app (modified to call gtmEvent) -->
+    <script type="text/babel">
+      const { useEffect, useMemo, useState } = React;
+      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+      const fmtDate = (d) => d.toISOString().slice(0,10);
+      const weekKeyOf = (date) => {
+        const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        const dayNum = (d.getUTCDay() + 6) % 7; d.setUTCDate(d.getUTCDate() - dayNum + 3);
+        const firstThu = new Date(Date.UTC(d.getUTCFullYear(),0,4));
+        const wk = 1 + Math.round((d - firstThu) / 604800000);
+        const yr = d.getUTCFullYear(); return `${yr}-${String(wk).padStart(2,'0')}`;
+      };
+      const LS_KEY = "rjc_store_v2";
+      const loadStore = () => { try{ return JSON.parse(localStorage.getItem(LS_KEY)) ?? {}; }catch{ return {}; } };
+      const saveStore = (s) => localStorage.setItem(LS_KEY, JSON.stringify(s));
 
-    /* avatar & list */
-    .leader-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
-    .leader-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))}
-    .avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff}
-    .u-name{font-weight:700;color:#fff;margin-right:auto}
+      // Ensure gtmEvent exists (redundant safe-guard)
+      if (!window.dataLayer) window.dataLayer = [];
+      if (typeof window.gtmEvent !== 'function') {
+        window.gtmEvent = function(name, params = {}) {
+          try { window.dataLayer.push(Object.assign({ event: name }, params)); } catch(e){}
+        };
+      }
 
-    /* history */
-    .table{width:100%;border-collapse:collapse;margin-top:6px;font-size:14px;color:#fff}
-    .table th{opacity:0.9;text-align:left;padding:6px}
-    .table td{padding:8px 6px;color:rgba(255,255,255,0.95)}
+      function App(){
+        const [size, setSize] = useState(() => clamp(Math.floor(window.innerWidth * 0.84), 220, 420));
+        useEffect(() => {
+          let raf=0; const onResize = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(()=> setSize(clamp(Math.floor(window.innerWidth*0.84), 220, 420))); };
+          window.addEventListener("resize", onResize, {passive:true}); window.addEventListener("orientationchange", onResize);
+          return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); window.removeEventListener("orientationchange", onResize); };
+        }, []);
 
-    /* bursts */
-    .bursts{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none}
-    .burst{position:absolute;font-weight:900;color:#fff7e0;text-shadow:0 6px 20px rgba(249,65,68,0.16);animation:burst 700ms cubic-bezier(.2,.9,.3,1) forwards}
-    @keyframes burst{0%{transform:translate(-50%,-50%) scale(.9);opacity:1}100%{transform:translate(-50%,-50%) scale(1.2);opacity:0}}
+        const [store, setStore] = useState(() => {
+          const s = loadStore(); if(!s.users){ s.users = {}; } if(!s.activeUserId){ s.activeUserId = null; } return s;
+        });
+        const active = store.activeUserId ? store.users?.[store.activeUserId] : null;
 
-    /* toast */
-    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#fff;padding:10px 14px;border-radius:10px;color:var(--muted);box-shadow:0 12px 30px rgba(0,0,0,0.18);display:none}
-  </style>
-</head>
+        // weekly rollover
+        useEffect(() => {
+          const now = new Date(); const wk = weekKeyOf(now);
+          const s = {...store, users:{...store.users}}; let changed=false;
+          for(const [uid,u] of Object.entries(s.users)){
+            if(u.weekKey !== wk){ s.users[uid] = {...u, weekKey:wk, weekly:0}; changed = true; }
+          }
+          if(changed){ setStore(s); saveStore(s); }
+          // eslint-disable-next-line
+        }, []);
 
-<body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PS452RRD" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End GTM (noscript) -->
+        const count = active?.lifetime ?? 0;
+        const within108 = count % 108;
+        const bead = within108 + 1;
+        const rounds = Math.floor(count / 108);
 
-  <div class="app" role="application" aria-label="Radha Jaap Counter">
-    <div>
-      <header class="hero">
-        <h1 class="title" role="img" aria-label="NaamJaa — Radha Naam Jaap">NaamJaa</h1>
-        <div class="sub">राधा के नाम का सरल जाप — कहीं भी टैप करें</div>
-      </header>
+        const stroke = 20; const r = (size - stroke) / 2; const C = 2 * Math.PI * r;
+        const dashOffset = C * (1 - within108 / 108);
 
-      <section class="card" aria-labelledby="counter-heading">
-        <h2 id="counter-heading" class="visually-hidden">Radha Jaap Counter</h2>
+        const spawnBurst = (x, y) => {
+          const layer = document.getElementById("bursts"); if(!layer) return;
+          const el = document.createElement("span"); el.className="burst"; el.textContent="राधा";
+          el.style.left = x+"px"; el.style.top = y+"px"; layer.appendChild(el);
+          el.addEventListener("animationend", ()=> el.remove(), {once:true});
+        };
+        const vibrate = (ms=10)=>{ try{ navigator.vibrate?.(ms);}catch{} };
 
-        <div class="ring-wrap" id="ring-wrap" aria-hidden="false">
-          <svg class="ring" viewBox="0 0 420 420" id="ring-svg" role="img" aria-label="108 bead ring">
-            <defs>
-              <linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#f8961e"/><stop offset="1" stop-color="#f94144"/></linearGradient>
-            </defs>
-            <circle cx="210" cy="210" r="150" stroke="var(--ring-bg)" stroke-width="30" fill="none" />
-            <g id="beads"></g>
-            <circle cx="210" cy="210" r="100" fill="rgba(0,0,0,0.06)"/>
-          </svg>
+        const updateUser = (uid, mutator) => {
+          setStore(prev => {
+            const s = {...prev, users:{...prev.users}}; const u = s.users[uid]; if(!u) return prev;
+            const newU = mutator(u); s.users[uid] = newU; saveStore(s); return s;
+          });
+        };
 
-          <div class="center" aria-live="polite">
-            <div class="count" id="center-bead">0 / 108</div>
-            <div class="rounds" id="center-rounds">Mala: 0 • Naam: 0</div>
+        // handle increment: also send analytics events
+        const handleInc = (x, y) => {
+          if(!active) return;
+          const predictedTotal = (active?.lifetime ?? 0) + 1;
+
+          updateUser(store.activeUserId, (u) => {
+            const now = new Date(); const wk = weekKeyOf(now); const today = fmtDate(now);
+            const dayCounts = {...(u.dayCounts||{})}; dayCounts[today] = (dayCounts[today]||0)+1;
+            return {...u, lifetime:u.lifetime+1, weekly:(u.weekKey===wk?u.weekly:0)+1, weekKey:wk, dayCounts};
+          });
+
+          // Analytics events
+          gtmEvent('increment', {
+            user_id: store.activeUserId || null,
+            total: predictedTotal,
+            method: 'tap'
+          });
+
+          if (predictedTotal % 108 === 0) {
+            gtmEvent('complete_108', {
+              user_id: store.activeUserId || null,
+              rounds: Math.floor(predictedTotal / 108)
+            });
+          }
+
+          vibrate(8); spawnBurst(x,y);
+        };
+
+        const handleDec = () => {
+          if(!active) return;
+          updateUser(store.activeUserId, (u) => {
+            const today = fmtDate(new Date()); const dayCounts = {...(u.dayCounts||{})};
+            if(u.lifetime>0){ if((dayCounts[today]||0)>0) dayCounts[today]-=1; return {...u, lifetime:u.lifetime-1, weekly:Math.max(0,u.weekly-1), dayCounts}; }
+            return u;
+          });
+          // track decrement (optional)
+          gtmEvent('decrement', { user_id: store.activeUserId || null });
+          vibrate(6);
+        };
+
+        const resetToMultiple108 = () => {
+          if(!active) return;
+          updateUser(store.activeUserId, (u) => {
+            const diff = u.lifetime % 108; if(diff===0) return u;
+            return {...u, lifetime:u.lifetime-diff, weekly:Math.max(0,(u.weekly||0)-diff)};
+          });
+          gtmEvent('reset_to_multiple_108', { user_id: store.activeUserId || null });
+        };
+
+        const resetAllForActive = () => {
+          if(!active) return;
+          if(confirm("Reset this user's counts? (lifetime, weekly & day history)")){
+            updateUser(store.activeUserId, (u)=> ({...u, lifetime:0, weekly:0, dayCounts:{}}));
+            gtmEvent('reset_user', { user_id: store.activeUserId || null });
+          }
+        };
+
+        const onScreenPointerDown = (e) => {
+          const x = (e.clientX ?? e?.touches?.[0]?.clientX ?? window.innerWidth/2);
+          const y = (e.clientY ?? e?.touches?.[0]?.clientY ?? window.innerHeight/2);
+          handleInc(x, y);
+        };
+        const stop = (e)=> e.stopPropagation();
+
+        const [name, setName] = useState("");
+        const [city, setCity] = useState("");
+        const makeId = () => Math.random().toString(36).slice(2,10);
+
+        const addUser = () => {
+          const nm = name.trim(); const ct = city.trim();
+          if(!nm) return alert("Please enter your name");
+          const id = makeId(); const wk = weekKeyOf(new Date());
+          const newUser = { id, name:nm, city:ct, createdAt: Date.now(), lifetime:0, weekly:0, weekKey:wk, dayCounts:{} };
+          const s = {...store, users:{...store.users, [id]:newUser}, activeUserId:id};
+          setStore(s); saveStore(s); setName(""); setCity("");
+          // set global small var for UPI/donate clicks
+          window.__rjc_activeUser = id;
+          // analytics
+          gtmEvent('create_profile', { user_id: id, name_length: nm.length });
+        };
+
+        const switchUser = (id) => {
+          const s = {...store, activeUserId:id}; setStore(s); saveStore(s);
+          window.__rjc_activeUser = id;
+          gtmEvent('switch_user', { user_id: id });
+        };
+
+        const deleteUser = (id) => {
+          if(!confirm("Delete this user? Data on this device will be removed.")) return;
+          const s = {...store, users:{...store.users}}; delete s.users[id];
+          if(s.activeUserId===id) s.activeUserId = Object.keys(s.users)[0] || null;
+          setStore(s); saveStore(s);
+          gtmEvent('delete_profile', { user_id: id });
+          if (s.activeUserId) window.__rjc_activeUser = s.activeUserId; else window.__rjc_activeUser = null;
+        };
+
+        const usersArr = useMemo(()=> Object.values(store.users||{}), [store.users]);
+        const weeklyBoard = useMemo(()=> [...usersArr].sort((a,b)=>(b.weekly||0)-(a.weekly||0)), [usersArr]);
+        const dayRows = useMemo(()=> active?.dayCounts ? Object.entries(active.dayCounts).sort((a,b)=> a[0]<b[0]?1:-1).slice(0,14) : [], [active]);
+
+        useEffect(() => {
+          const onKey = (e) => {
+            if (e.key === " " || e.key === "Enter") { e.preventDefault(); handleInc(window.innerWidth/2, window.innerHeight/2); }
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { handleDec(); }
+          };
+          window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey);
+        }, [active]);
+
+        const noUsers = (usersArr.length===0);
+
+        return (
+          <div className="screen" onPointerDown={onScreenPointerDown}>
+            <section className="wrap" aria-label="Counter and Controls">
+              <header style={{textAlign:"center"}}>
+                <h1 className="title" aria-label="Radha">राधा</h1>
+                <p className="hint">Kahin bhi tap karo — 1 mantra add hoga</p>
+              </header>
+
+              <section className="soft-card" onPointerDown={stop} aria-label="Profile">
+                {noUsers ? (
+                  <>
+                    <div className="row" role="group" aria-label="Create profile">
+                      <label className="visually-hidden" htmlFor="name">Name</label>
+                      <input id="name" className="input" autoComplete="name" placeholder="Name" value={name} onChange={e=>setName(e.target.value)} />
+                      <label className="visually-hidden" htmlFor="city">City</label>
+                      <input id="city" className="input" autoComplete="address-level2" placeholder="City" value={city} onChange={e=>setCity(e.target.value)} />
+                      <button onPointerDown={stop} onClick={addUser}>Create Profile</button>
+                    </div>
+                    <div className="footer">Har device par alag profiles save hoti hain (offline).</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="row" style={{justifyContent:"space-between"}}>
+                      <div className="row" style={{justifyContent:"flex-start"}}>
+                        <span className="pill" aria-hidden="true">Active:</span>
+                        <label className="visually-hidden" htmlFor="activeUser">Active user</label>
+                        <select id="activeUser" className="input" value={store.activeUserId||""} onChange={e=>switchUser(e.target.value)} style={{minWidth:200}}>
+                          {usersArr.map(u=>(
+                            <option key={u.id} value={u.id}>{u.name}{u.city?` • ${u.city}`:""}</option>
+                          ))}
+                        </select>
+                      </div>
+                      {active && <button onPointerDown={stop} onClick={()=>deleteUser(active.id)} aria-label="Delete active user">Delete</button>}
+                    </div>
+                    {!active && <div className="footer">Please select a user above.</div>}
+                  </>
+                )}
+              </section>
+
+              <div className="ring-wrap" aria-hidden="true">
+                <svg viewBox={`0 0 ${size} ${size}`}>
+                  <circle cx={size/2} cy={size/2} r={r} stroke="var(--ring-bg)" strokeWidth={stroke} fill="none" />
+                  <circle
+                    cx={size/2}
+                    cy={size/2}
+                    r={r}
+                    stroke="url(#gradient)"
+                    strokeWidth={stroke}
+                    fill="none"
+                    strokeDasharray={C}
+                    strokeDashoffset={dashOffset}
+                    transform={`rotate(-90 ${size/2} ${size/2})`}
+                    strokeLinecap="round"
+                  />
+                  <defs>
+                    <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#f8961e" />
+                      <stop offset="100%" stopColor="#f94144" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <section className="stats soft-card" aria-live="polite">
+                {active ? (
+                  <>
+                    <div className="big" aria-label={`Bead ${bead} of 108`}>{bead} / 108</div>
+                    <div>Mala: {rounds}</div>
+                    <div>Naam: {active.lifetime}</div>
+                    <div>This Week: {active.weekly} <span className="footer">Auto reset every Monday</span></div>
+                  </>
+                ) : (<div>Please create/select a user to start.</div>)}
+              </section>
+
+              <div className="controls" onPointerDown={e=>e.stopPropagation()} role="group" aria-label="Controls">
+                <button onClick={handleDec} aria-label="Decrement by 1">-1</button>
+                <button onClick={resetToMultiple108}>Reset to multiple of 108</button>
+                <button onClick={resetAllForActive}>Reset User</button>
+              </div>
+
+              {active && (
+                <section className="soft-card" onPointerDown={e=>e.stopPropagation()} aria-label="History (Last 14 days)">
+                  <div className="row" style={{justifyContent:"space-between"}}>
+                    <strong>Last 14 days</strong>
+                    <span className="pill">{active.name}{active.city?` • ${active.city}`:""}</span>
+                  </div>
+                  {Object.keys(active.dayCounts||{}).length ? (
+                    <table className="table" role="table" aria-label="Daily history">
+                      <thead><tr><th scope="col">Date</th><th scope="col">Count</th></tr></thead>
+                      <tbody>
+                        {Object.entries(active.dayCounts).sort((a,b)=> a[0]<b[0]?1:-1).slice(0,14).map(([d,c])=>(
+                          <tr key={d}><td>{d}</td><td>{c}</td></tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : <div className="footer">No history yet — tap to begin.</div>}
+                </section>
+              )}
+
+              {Object.values(store.users||{}).length>1 && (
+                <section className="soft-card" onPointerDown={e=>e.stopPropagation()} aria-label="Weekly leaderboard (this device)">
+                  <div className="row" style={{justifyContent:"space-between"}}>
+                    <strong>Weekly Leaderboard</strong>
+                    <span className="pill">{weekKeyOf(new Date())}</span>
+                  </div>
+                  <table className="table" role="table">
+                    <thead><tr><th>#</th><th>User</th><th>City</th><th>Jaap (week)</th></tr></thead>
+                    <tbody>
+                      {[...Object.values(store.users)].sort((a,b)=>(b.weekly||0)-(a.weekly||0)).map((u,i)=>(
+                        <tr key={u.id}><td>{i+1}</td><td>{u.name}</td><td>{u.city||"-"}</td><td>{u.weekly||0}</td></tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div className="footer">Note: Ye leaderboard sirf is device par stored users ke liye hai (global nahi).</div>
+                </section>
+              )}
+
+              <p className="footer">Space/Enter = +1 • Ctrl/⌘Z = -1 • Haptics on mobile</p>
+            </section>
           </div>
-        </div>
+        );
+      }
 
-        <div class="controls" role="group" aria-label="counter controls">
-          <button class="btn" id="tap-here" aria-label="Tap to add one">Tap • +1</button>
-          <button class="btn ghost" id="btn-decrement" aria-label="Decrement by one">-1</button>
-          <button class="btn ghost" id="btn-reset108" aria-label="Reset to multiple of 108">Reset to multiple of 108</button>
-          <button class="btn ghost" id="btn-reset-user" aria-label="Reset user">Reset User</button>
-        </div>
-      </section>
-    </div>
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
 
-    <aside>
-      <div class="card" aria-label="profile card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <strong>Profile</strong>
-          <span class="pill">Device only</span>
-        </div>
+    <!-- UPI support button (fires donate_click event) -->
+    <a
+      class="upi-fab"
+      href="upi://pay?pa=ankitgupta1181-5@oksbi&pn=Radha%20Jaap%20Counter&tn=Dhanyavaad%20🙏&cu=INR"
+      title="Support via UPI"
+      aria-label="Support via UPI"
+      rel="nofollow"
+      onclick="gtmEvent('donate_click', { user_id: window.__rjc_activeUser || null });"
+    >❤️ UPI</a>
 
-        <!-- create form always visible -->
-        <div style="margin-top:10px">
-          <form id="profile-form" onsubmit="return false" class="profile-row" aria-label="create profile">
-            <input id="p-name" class="input" placeholder="Name" aria-label="Name" />
-            <input id="p-city" class="input" placeholder="City (optional)" aria-label="City" />
-            <button id="btn-create" class="btn" type="button">Add</button>
-          </form>
-          <div id="profile-actions" style="margin-top:12px"></div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:12px" aria-label="leaderboard">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <strong>Weekly Leaderboard</strong>
-          <div class="small" id="wkkey">—</div>
-        </div>
-        <div class="leader-list" id="leader-list"></div>
-        <div class="small" style="margin-top:8px">Leaderboard stored only on this device.</div>
-      </div>
-
-      <div class="card" style="margin-top:12px" aria-label="history">
-        <strong>Last 14 days</strong>
-        <div id="history-area" style="min-height:44px;margin-top:8px" class="small">No history yet — tap to begin.</div>
-      </div>
-    </aside>
-  </div>
-
-  <!-- UPI support FAB -->
-  <a class="fab" href="upi://pay?pa=ankitgupta1181-5@oksbi&pn=Radha%20Jaap%20Counter&tn=Dhanyavaad%20🙏&cu=INR" rel="nofollow" aria-label="Support via UPI" onclick="gtmEvent('donate_click',{user_id: window.__rjc_activeUser || null});">
-    ❤️ Support
-  </a>
-
-  <div id="bursts" class="bursts" aria-hidden="true"></div>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-<script>
-/* ---------- Polished vanilla JS app with GTM enabled ---------- */
-
-/* gtmEvent uses real dataLayer pushed by GTM script above */
-window.dataLayer = window.dataLayer || [];
-function gtmEvent(name, params={}){ try{ window.dataLayer.push(Object.assign({ event: name }, params)); }catch(e){ /* noop */ } }
-
-/* storage helpers */
-const LS_KEY = 'rjc_store_v2', BEAD_COUNT = 108;
-function localStorageAvailable(){ try{ localStorage.setItem('__t','1'); localStorage.removeItem('__t'); return true;}catch(e){return false;} }
-const LS_OK = localStorageAvailable();
-let memStore = null;
-function loadStore(){
-  if(!LS_OK){ memStore = memStore || { users:{}, activeUserId: null }; return JSON.parse(JSON.stringify(memStore)); }
-  try{ return JSON.parse(localStorage.getItem(LS_KEY)) ?? { users:{}, activeUserId:null }; }catch(e){ return { users:{}, activeUserId:null }; }
-}
-function saveStore(s){
-  if(!LS_OK){ memStore = JSON.parse(JSON.stringify(s)); return; }
-  try{ localStorage.setItem(LS_KEY, JSON.stringify(s)); }catch(e){}
-}
-
-/* initial store */
-let store = loadStore();
-if(!store.users) store.users = {};
-if(!('activeUserId' in store)) store.activeUserId = null;
-window.__rjc_store = store;
-window.__rjc_activeUser = store.activeUserId || null;
-
-/* DOM refs */
-const beadsGroup = document.getElementById('beads');
-const centerBead = document.getElementById('center-bead');
-const centerRounds = document.getElementById('center-rounds');
-const tapHere = document.getElementById('tap-here');
-const btnDec = document.getElementById('btn-decrement');
-const btnReset108 = document.getElementById('btn-reset108');
-const btnResetUser = document.getElementById('btn-reset-user');
-const nameInput = document.getElementById('p-name');
-const cityInput = document.getElementById('p-city');
-const createBtn = document.getElementById('btn-create');
-const profileActions = document.getElementById('profile-actions');
-const leaderList = document.getElementById('leader-list');
-const wkkeyEl = document.getElementById('wkkey');
-const historyArea = document.getElementById('history-area');
-const bursts = document.getElementById('bursts');
-const toast = document.getElementById('toast');
-
-/* helper UI */
-function toastShow(msg, ms=1400){ toast.textContent = msg; toast.style.display='block'; setTimeout(()=> toast.style.display='none', ms); }
-
-/* create beads (108) with 27 marks */
-function createBeads(){
-  beadsGroup.innerHTML = '';
-  const cx=210, cy=210, rr=150;
-  for(let i=0;i<BEAD_COUNT;i++){
-    const angle = (i/BEAD_COUNT) * Math.PI*2 - Math.PI/2;
-    const x = cx + Math.cos(angle)*rr, y = cy + Math.sin(angle)*rr;
-    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', 6);
-    c.setAttribute('data-index', i+1);
-    if(((i+1) % 27) === 0){ c.setAttribute('data-mark','true'); c.setAttribute('fill','#fff4e6'); c.setAttribute('stroke','#f8961e'); }
-    else { c.setAttribute('fill','rgba(255,255,255,0.08)'); }
-    beadsGroup.appendChild(c);
-  }
-}
-createBeads();
-
-/* date helpers */
-const fmtDate = d => d.toISOString().slice(0,10);
-function weekKeyOf(date){
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = (d.getUTCDay() + 6) % 7; d.setUTCDate(d.getUTCDate() - dayNum + 3);
-  const firstThu = new Date(Date.UTC(d.getUTCFullYear(),0,4));
-  const wk = 1 + Math.round((d - firstThu) / 604800000);
-  const yr = d.getUTCFullYear(); return `${yr}-${String(wk).padStart(2,'0')}`;
-}
-
-/* active user */
-function getActive(){ return store.activeUserId ? store.users[store.activeUserId] : null; }
-
-/* update UI */
-function updateUI(){
-  window.__rjc_store = store;
-  window.__rjc_activeUser = store.activeUserId || null;
-  const active = getActive();
-  const total = active?.lifetime ?? 0;
-  const within = total % BEAD_COUNT;
-  const beadNum = within === 0 ? (total>0 ? BEAD_COUNT : 0) : within;
-  centerBead.textContent = `${beadNum} / ${BEAD_COUNT}`;
-  centerRounds.textContent = `Mala: ${Math.floor(total/BEAD_COUNT)} • Naam: ${total}`;
-
-  // beads update
-  const beadEls = beadsGroup.querySelectorAll('circle');
-  beadEls.forEach((el, idx) => {
-    const index = idx + 1;
-    if(index <= (total % BEAD_COUNT)){
-      el.setAttribute('r','7'); el.setAttribute('fill','#fff2d9'); el.setAttribute('stroke','#f94144');
-    } else {
-      if(el.getAttribute('data-mark') === 'true'){ el.setAttribute('r','7'); el.setAttribute('fill','#fff4e6'); el.setAttribute('stroke','#f8961e'); }
-      else { el.setAttribute('r','6'); el.setAttribute('fill','rgba(255,255,255,0.08)'); el.removeAttribute('stroke'); }
-    }
-  });
-
-  renderProfiles();
-  renderLeaderboard();
-  renderHistory();
-  wkkeyEl.textContent = active ? active.weekKey : '—';
-}
-
-/* render profiles */
-function renderProfiles(){
-  profileActions.innerHTML = '';
-  const users = Object.values(store.users || {});
-  if(users.length === 0){
-    const d = document.createElement('div'); d.className='small'; d.textContent = 'No users yet — add one above.';
-    profileActions.appendChild(d); return;
-  }
-  const wrap = document.createElement('div'); wrap.className='profile-row';
-  const sel = document.createElement('select'); sel.className='input'; sel.style.minWidth='180px';
-  const empty = document.createElement('option'); empty.value=''; empty.textContent='Select user'; sel.appendChild(empty);
-  users.forEach(u => { const o=document.createElement('option'); o.value=u.id; o.textContent = u.name + (u.city?` • ${u.city}`:''); sel.appendChild(o); });
-  sel.value = store.activeUserId || '';
-  sel.addEventListener('change', e => { if(!e.target.value) return; store.activeUserId = e.target.value; saveStore(store); updateUI(); gtmEvent('switch_user',{user_id:e.target.value}); toastShow('Profile switched'); });
-  wrap.appendChild(sel);
-
-  const del = document.createElement('button'); del.className='btn warn'; del.textContent='Delete';
-  del.addEventListener('click', ()=> {
-    if(!sel.value){ alert('Select a user to delete'); return; }
-    if(!confirm('Delete this profile? This removes data on this device.')) return;
-    const id = sel.value; delete store.users[id];
-    if(store.activeUserId === id) store.activeUserId = Object.keys(store.users)[0] || null;
-    saveStore(store); updateUI(); gtmEvent('delete_profile',{user_id:id}); toastShow('Profile deleted');
-  });
-  wrap.appendChild(del);
-  profileActions.appendChild(wrap);
-}
-
-/* leaderboard */
-function renderLeaderboard(){
-  leaderList.innerHTML = '';
-  const arr = Object.values(store.users || {});
-  if(arr.length === 0){ leaderList.innerHTML = '<div class="small">No users yet</div>'; return; }
-  const sorted = arr.slice().sort((a,b)=>(b.weekly||0)-(a.weekly||0));
-  sorted.forEach((u,i) => {
-    const row = document.createElement('div'); row.className='leader-row';
-    const avatar = document.createElement('div'); avatar.className='avatar';
-    const hue = Math.abs(u.name.split('').reduce((acc,c)=>acc*31 + c.charCodeAt(0),0)) % 360;
-    avatar.style.background = `linear-gradient(135deg,hsl(${hue} 70% 45%), hsl(${(hue+40)%360} 70% 50%))`;
-    avatar.textContent = u.name.slice(0,1).toUpperCase();
-    const nameDiv = document.createElement('div'); nameDiv.className='u-name'; nameDiv.textContent = u.name + (u.city? ` • ${u.city}`: '');
-    const score = document.createElement('div'); score.textContent = (u.weekly||0);
-    if(i===0){ nameDiv.appendChild(document.createTextNode(' 🥇')); }
-    else if(i===1){ nameDiv.appendChild(document.createTextNode(' 🥈')); }
-    else if(i===2){ nameDiv.appendChild(document.createTextNode(' 🥉')); }
-    row.appendChild(avatar); row.appendChild(nameDiv); row.appendChild(score);
-    leaderList.appendChild(row);
-  });
-}
-
-/* history */
-function renderHistory(){
-  const active = getActive();
-  if(!active){ historyArea.textContent = 'No history yet — create/select a profile to begin.'; return; }
-  const entries = Object.entries(active.dayCounts || {}).sort((a,b)=> b[0].localeCompare(a[0])).slice(0,14);
-  if(entries.length === 0){ historyArea.textContent = 'No history yet — tap to begin.'; return; }
-  const table = document.createElement('table'); table.className='table';
-  const thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Date</th><th>Count</th></tr>';
-  const tbody = document.createElement('tbody');
-  entries.forEach(([d,c]) => { const tr=document.createElement('tr'); tr.innerHTML = `<td>${d}</td><td>${c}</td>`; tbody.appendChild(tr); });
-  table.appendChild(thead); table.appendChild(tbody); historyArea.innerHTML=''; historyArea.appendChild(table);
-}
-
-/* make id */
-function makeId(){ return Math.random().toString(36).slice(2,9); }
-
-/* spawn burst */
-function spawnBurst(x,y){
-  const el = document.createElement('div'); el.className='burst'; el.textContent='राधा';
-  el.style.left = x + 'px'; el.style.top = y + 'px'; bursts.appendChild(el);
-  el.addEventListener('animationend', ()=> el.remove(), {once:true});
-  try{ navigator.vibrate?.(8); }catch(e){}
-}
-
-/* handleInc */
-function handleInc(x=window.innerWidth/2, y=window.innerHeight/2){
-  const active = getActive(); if(!active){ alert('Please create/select a profile first'); return; }
-  const predicted = (active.lifetime||0) + 1;
-  const now = new Date(); const wk = weekKeyOf(now); const today = fmtDate(now);
-  active.dayCounts = active.dayCounts || {}; active.dayCounts[today] = (active.dayCounts[today]||0) + 1;
-  active.lifetime = (active.lifetime||0) + 1;
-  active.weekly = (active.weekKey === wk ? (active.weekly||0) : 0) + 1;
-  active.weekKey = wk;
-  store.users[active.id] = active; saveStore(store); updateUI();
-  gtmEvent('increment',{ user_id: store.activeUserId || null, total: predicted, method: 'tap' });
-  if(predicted % BEAD_COUNT === 0) gtmEvent('complete_108',{ user_id: store.activeUserId || null, rounds: Math.floor(predicted/BEAD_COUNT) });
-  spawnBurst(x,y);
-}
-
-/* events */
-tapHere.addEventListener('click', ()=> handleInc(window.innerWidth/2, window.innerHeight/2));
-document.getElementById('ring-wrap').addEventListener('pointerdown', (e)=>{
-  if(e.target.closest('button') || e.target.closest('input') || e.target.closest('select')) return;
-  handleInc(e.clientX, e.clientY);
-});
-btnDec.addEventListener('click', ()=>{
-  const active = getActive(); if(!active) return;
-  const today = fmtDate(new Date()); active.dayCounts = active.dayCounts || {};
-  if(active.lifetime>0){ if((active.dayCounts[today]||0)>0) active.dayCounts[today]-=1; active.lifetime = Math.max(0, active.lifetime-1); active.weekly = Math.max(0,(active.weekly||0)-1); store.users[active.id] = active; saveStore(store); updateUI(); gtmEvent('decrement',{user_id:store.activeUserId||null}); }
-});
-btnReset108.addEventListener('click', ()=>{
-  const active = getActive(); if(!active) return;
-  const diff = active.lifetime % BEAD_COUNT; if(diff===0){ toastShow('Already at multiple of 108'); return; }
-  active.lifetime -= diff; active.weekly = Math.max(0,(active.weekly||0) - diff); store.users[active.id] = active; saveStore(store); updateUI(); gtmEvent('reset_to_multiple_108',{user_id: store.activeUserId||null}); toastShow('Reset to nearest multiple of 108');
-});
-btnResetUser.addEventListener('click', ()=>{
-  const active = getActive(); if(!active) return;
-  if(!confirm('Reset this user (clears lifetime, weekly & daily history)?')) return;
-  active.lifetime=0; active.weekly=0; active.dayCounts={}; store.users[active.id]=active; saveStore(store); updateUI(); gtmEvent('reset_user',{user_id:store.activeUserId||null}); toastShow('User reset');
-});
-
-/* create profile */
-createBtn.addEventListener('click', ()=>{
-  const nm = nameInput.value.trim(), ct = cityInput.value.trim();
-  if(!nm){ alert('Please enter your name'); nameInput.focus(); return; }
-  const id = makeId(); const wk = weekKeyOf(new Date());
-  const u = { id, name: nm, city: ct, createdAt: Date.now(), lifetime:0, weekly:0, weekKey: wk, dayCounts: {} };
-  store.users[id] = u; store.activeUserId = id; saveStore(store); updateUI();
-  nameInput.value=''; cityInput.value=''; window.__rjc_activeUser = id;
-  gtmEvent('create_profile',{ user_id:id, name_length: nm.length }); toastShow('Profile added');
-});
-
-/* keyboard */
-window.addEventListener('keydown', (e)=>{
-  if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); handleInc(window.innerWidth/2, window.innerHeight/2); }
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z'){ /* optional undo */ }
-});
-
-/* weekly rollover + init */
-(function init(){
-  const now = new Date(), wk = weekKeyOf(now);
-  let changed=false;
-  for(const [id,u] of Object.entries(store.users)){
-    if(u.weekKey !== wk){ u.weekKey = wk; u.weekly = 0; store.users[id] = u; changed=true; }
-  }
-  if(changed) saveStore(store);
-  updateUI();
-  window.__rjc_store = store;
-  window.__rjc_helpers = {
-    createTest(name='You', city='City'){ const id=makeId(); const wk=weekKeyOf(new Date()); const u={id,name,city,createdAt:Date.now(),lifetime:0,weekly:0,weekKey:wk,dayCounts:{}}; store.users[id]=u; store.activeUserId=id; saveStore(store); updateUI(); return id; },
-    clearAll(){ if(confirm('Clear local data?')){ store = { users:{}, activeUserId: null }; saveStore(store); updateUI(); } }
-  };
-})();
-</script>
-</body>
+    <!-- Service worker hint -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        // navigator.serviceWorker.register('/sw.js'); // enable after adding sw.js
+      }
+    </script>
+  </body>
 </html>
