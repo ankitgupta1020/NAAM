@@ -1,496 +1,301 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
-    <title>Radha Naam Jaap Counter — तेज़, मोबाइल-फ्रेंडली | NaamJaa</title>
-    <meta name="description" content="Radha Naam Jaap counter — Tap anywhere to add 1 mantra, track rounds (108), create profile, view daily history & weekly leaderboard. Fast, offline friendly." />
+    <title>Radha Naam Jaap — Global Counter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="canonical" href="https://naamjaa.netlify.app/radha-jaap/" />
-    <meta name="robots" content="index, follow" />
-    <link rel="sitemap" href="/sitemap.xml" />
-
-    <!-- dataLayer helper: place BEFORE the GTM script so early events are captured -->
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtmEvent(name, params = {}) {
-        try {
-          window.dataLayer.push(Object.assign({ event: name }, params));
-        } catch (e) { /* ignore */ }
-      }
-    </script>
-
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-PS452RRD');</script>
-    <!-- End Google Tag Manager -->
-
-    <!-- PWA / Theming -->
-    <meta name="theme-color" content="#f3722c" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="icon" href="/icons/icon-192.png" sizes="192x192" />
-    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Radha Naam Jaap Counter — NaamJaa">
-    <meta property="og:description" content="Tap anywhere to count mantras. Track 108, create profile, view history & leaderboard. Mobile friendly and offline capable.">
-    <meta property="og:url" content="https://naamjaa.netlify.app/radha-jaap/">
-    <meta property="og:image" content="https://naamjaa.netlify.app/og-image.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Radha Naam Jaap Counter — NaamJaa">
-    <meta name="twitter:description" content="Tap anywhere to count mantras. Track 108, create profile & view leaderboard.">
-    <meta name="twitter:image" content="https://naamjaa.netlify.app/og-image.png">
-
-    <!-- Preconnect -->
-    <link rel="preconnect" href="https://unpkg.com" crossorigin>
-    <link rel="dns-prefetch" href="//unpkg.com">
-
-    <!-- NOTE: For production, remove Babel and ship prebuilt JS bundle.
-         Keep React+ReactDOM production builds via CDN or use your build pipeline. -->
-    <script defer crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script defer crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script defer crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
-      /* (Your original CSS kept mostly unchanged) */
-      :root{
-        --bg-start:#f9c74f; --bg-end:#f3722c; --fg:#2d1b00; --title:#f94144; --hint:#fef9c3; --ring-bg:rgba(255,255,255,.3);
-        --pad:16px; --safe-top: max(var(--pad), env(safe-area-inset-top));
-        --safe-right: max(var(--pad), env(safe-area-inset-right));
-        --safe-bottom: max(var(--pad), env(safe-area-inset-bottom));
-        --safe-left: max(var(--pad), env(safe-area-inset-left));
-        --focus: #1f2937;
-      }
-      *{ box-sizing:border-box; }
-      html,body{ height:100%; margin:0; }
-      body{
-        font-family:"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        background: radial-gradient(circle at top, var(--bg-start), var(--bg-end));
-        color:var(--fg);
-        user-select:none;
-        -webkit-tap-highlight-color: transparent;
-      }
-      a:focus, button:focus, input:focus, select:focus{ outline:2px solid var(--focus); outline-offset:2px; }
-
-      .screen{ min-height:100dvh; width:100%; display:flex; align-items:center; justify-content:center; overflow:hidden;
-        padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); position:relative; touch-action: manipulation; }
-      .wrap{ display:flex; flex-direction:column; align-items:center; gap:16px; max-width:720px; width:100%; }
-      .title{ text-align:center; margin:0; font-weight:900; font-size: clamp(32px, 8vw, 64px); letter-spacing:1px; color:var(--title); text-shadow:0 2px 10px rgba(0,0,0,.15); }
-      .hint{ text-align:center; margin-top:6px; color:var(--hint); font-size: clamp(14px, 3.5vw, 18px); opacity:.95; }
-      .stats{ text-align:center; line-height:1.25; }
-      .big{ font-size: clamp(28px, 9vw, 56px); font-weight:800; color:#fff7e0; }
-      .soft-card{ background: rgba(255,255,255,.15); backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,.3); border-radius:20px; padding: 14px 18px; box-shadow:0 10px 24px rgba(0,0,0,.15); color:var(--hint); width:min(92vw, 560px); }
-      .controls{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:min(92vw, 560px); }
-      button{ appearance:none; border:none; border-radius:999px; padding:14px 20px; min-height:52px; font-weight:800; font-size: clamp(14px, 4vw, 16px); cursor:pointer; background: rgba(255,255,255,.9); color:var(--fg); box-shadow:0 8px 18px rgba(0,0,0,.15); transition: transform .15s ease, filter .15s ease; }
-      @media (hover:hover){ button:hover{ filter:brightness(1.05); } } button:active{ transform: translateY(1px); }
-      .footer{ font-size:12px; opacity:.85; margin-top:6px; color:#fffde8 }
-      .ring-wrap{ width: min(84vw, 420px); aspect-ratio: 1 / 1; display:grid; place-items:center; }
-      .ring-wrap svg{ width:100%; height:100%; display:block; }
-      .burst{ position:absolute; left:0; top:0; transform: translate(-50%, -50%) scale(.85); font-weight:900; font-size: clamp(36px, 10vw, 120px); line-height:1; color:#fff6dc; text-shadow: 0 0 8px rgba(255,244,200,.9), 0 0 22px rgba(249,137,30,.7), 0 0 46px rgba(249,65,68,.55); opacity:0; animation: burst 900ms ease-out forwards; will-change: transform, opacity; pointer-events:none; }
-      @keyframes burst{ 0%{opacity:1; transform:translate(-50%,-50%) scale(.9);} 70%{opacity:1; transform:translate(-50%,-50%) scale(1.08);} 100%{opacity:0; transform:translate(-50%,-50%) scale(1.22);} }
-      @media (prefers-reduced-motion: reduce){ .burst{ animation-duration: 300ms; } button{ transition: none; } }
-      .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; }
-      .input{ background: rgba(255,255,255,.92); border:1px solid rgba(0,0,0,.08); border-radius:14px; padding:12px 14px; min-height:48px; font-size:16px; outline:none; box-shadow:0 6px 14px rgba(0,0,0,.08) inset; }
-      .table{ width:100%; border-collapse:separate; border-spacing:0 8px; color:#fffef4; font-size:14px; }
-      .table th{ text-align:left; opacity:.9; } .table td, .table th{ padding:8px 10px; } .pill{ display:inline-block; background:rgba(255,255,255,.18); padding:4px 10px; border-radius:999px; font-weight:700; }
-      .upi-fab{ position:fixed; right:16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index:999; background:#ffffffcc; color:#2d1b00; border-radius:999px; padding:12px 16px; font-weight:800; text-decoration:none; box-shadow:0 10px 24px rgba(0,0,0,.18); backdrop-filter: blur(6px); }
-      .visually-hidden{ position:absolute!important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap; }
-      .hero-cta{ display:inline-block; margin-top:10px; padding:12px 18px; border-radius:12px; background:#fff; color:var(--fg); font-weight:800; text-decoration:none; }
-    </style>
-
-    <!-- Structured Data: WebSite + WebApplication + FAQ -->
-    <script type="application/ld+json">
-    {
-      "@context":"https://schema.org",
-      "@graph":[
-        {
-          "@type":"WebSite",
-          "@id":"https://naamjaa.netlify.app/#website",
-          "url":"https://naamjaa.netlify.app/",
-          "name":"NaamJaa",
-          "description":"Radha Naam Jaap counter — Tap anywhere to add a mantra, track 108 rounds, create profile and view leaderboard.",
-          "potentialAction": {
-            "@type":"SearchAction",
-            "target":"https://naamjaa.netlify.app/radha-jaap/?q={search_term_string}",
-            "query-input":"required name=search_term_string"
-          }
-        },
-        {
-          "@type":"WebApplication",
-          "@id":"https://naamjaa.netlify.app/#app",
-          "name":"Radha Jaap Counter",
-          "url":"https://naamjaa.netlify.app/radha-jaap/",
-          "applicationCategory":"UtilityApplication",
-          "operatingSystem":"Web",
-          "description":"Simple Radha naam jaap counter — mobile friendly and offline capable."
-        },
-        {
-          "@type":"FAQPage",
-          "@id":"https://naamjaa.netlify.app/radha-jaap/#faq",
-          "mainEntity":[
-            {"@type":"Question","name":"How do I count mantras?","acceptedAnswer":{"@type":"Answer","text":"Tap anywhere on the screen (or press Space/Enter) to add +1 mantra. Use the controls to reset or decrement."}},
-            {"@type":"Question","name":"Is data saved?","acceptedAnswer":{"@type":"Answer","text":"Data is stored locally on your device (offline). Profiles are device-specific."}},
-            {"@type":"Question","name":"Can I support the developer?","acceptedAnswer":{"@type":"Answer","text":"Yes — click the UPI button to donate. The app is free to use."}}
-          ]
+        :root {
+            --bg: #0a0a0c;
+            --card: rgba(255, 255, 255, 0.06);
+            --primary: #ff7043;
+            --secondary: #f9c74f;
+            --text: #ffffff;
+            --accent: #f94144;
         }
-      ]
-    }
-    </script>
 
-  </head>
-  <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PS452RRD"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at center, #1a0f00 0%, #050505 100%);
+            color: var(--text);
+            height: 100dvh;
+            overflow: hidden; /* Prevents bounce scrolling */
+        }
 
-    <a class="visually-hidden" href="#main-content">Skip to main content</a>
+        /* The Main Tap Area */
+        .app-container {
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
+            position: relative;
+        }
 
-    <div id="bursts" class="bursts" aria-hidden="true"></div>
+        .glass-panel {
+            background: var(--card);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 20px;
+            width: 100%;
+            max-width: 450px;
+        }
 
-    <!-- Provide crawlable content for search engines (and users without JS) -->
-    <main id="main-content" role="main" aria-label="Radha Jaap Counter App">
-      <noscript>
-        <div style="max-width:720px;margin:24px auto;padding:16px;background:#fff3;border-radius:12px;color:#2d1b00">
-          <h1>Radha Naam Jaap Counter</h1>
-          <p>Tap anywhere to add 1 mantra. Track rounds (108), create offline profiles, view daily history and a weekly leaderboard (device-only).</p>
-          <p><strong>Quick Start:</strong> Tap / Click the button below to simulate starting the counter.</p>
-          <a class="hero-cta" href="#radha-cta" onclick="alert('JavaScript required to run the live counter — please enable JS')">Start Jaap (enable JS)</a>
-        </div>
-      </noscript>
+        .header { text-align: center; margin-top: 20px; }
+        .header h1 { 
+            margin: 0; font-size: 3rem; color: var(--accent); 
+            text-shadow: 0 0 20px rgba(249, 65, 68, 0.4);
+        }
 
-      <div id="root" aria-hidden="false"></div>
-    </main>
+        /* Counter Circle */
+        .counter-section {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            width: 100%;
+        }
 
-    <!-- Inline app (modified to call gtmEvent) -->
+        .main-ring {
+            width: min(75vw, 320px);
+            height: min(75vw, 320px);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.03);
+            border: 4px solid var(--card);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            transition: transform 0.1s active;
+        }
+
+        .count-big {
+            font-size: 5rem;
+            font-weight: 900;
+            margin: 0;
+            background: linear-gradient(180deg, #fff 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Leaderboard styling */
+        .leaderboard-tray {
+            max-height: 30vh;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .user-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+        }
+
+        .pill {
+            background: var(--accent);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        button {
+            background: var(--text);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px;
+            border-radius: 10px;
+            color: #fff;
+            outline: none;
+        }
+
+        .burst {
+            position: absolute;
+            pointer-events: none;
+            color: var(--secondary);
+            font-weight: 900;
+            animation: flyUp 0.8s ease-out forwards;
+        }
+
+        @keyframes flyUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-100px) scale(1.5); }
+        }
+
+        .footer-tools { margin-bottom: 20px; display: flex; gap: 10px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
     <script type="text/babel">
-      const { useEffect, useMemo, useState } = React;
-      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-      const fmtDate = (d) => d.toISOString().slice(0,10);
-      const weekKeyOf = (date) => {
-        const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-        const dayNum = (d.getUTCDay() + 6) % 7; d.setUTCDate(d.getUTCDate() - dayNum + 3);
-        const firstThu = new Date(Date.UTC(d.getUTCFullYear(),0,4));
-        const wk = 1 + Math.round((d - firstThu) / 604800000);
-        const yr = d.getUTCFullYear(); return `${yr}-${String(wk).padStart(2,'0')}`;
-      };
-      const LS_KEY = "rjc_store_v2";
-      const loadStore = () => { try{ return JSON.parse(localStorage.getItem(LS_KEY)) ?? {}; }catch{ return {}; } };
-      const saveStore = (s) => localStorage.setItem(LS_KEY, JSON.stringify(s));
+        const { useState, useEffect, useMemo } = React;
 
-      // Ensure gtmEvent exists (redundant safe-guard)
-      if (!window.dataLayer) window.dataLayer = [];
-      if (typeof window.gtmEvent !== 'function') {
-        window.gtmEvent = function(name, params = {}) {
-          try { window.dataLayer.push(Object.assign({ event: name }, params)); } catch(e){}
-        };
-      }
+        function App() {
+            const [count, setCount] = useState(0);
+            const [user, setUser] = useState(null);
+            const [globalBoard, setGlobalBoard] = useState([]);
+            const [nameInput, setNameInput] = useState("");
+            const [cityInput, setCityInput] = useState("");
 
-      function App(){
-        const [size, setSize] = useState(() => clamp(Math.floor(window.innerWidth * 0.84), 220, 420));
-        useEffect(() => {
-          let raf=0; const onResize = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(()=> setSize(clamp(Math.floor(window.innerWidth*0.84), 220, 420))); };
-          window.addEventListener("resize", onResize, {passive:true}); window.addEventListener("orientationchange", onResize);
-          return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); window.removeEventListener("orientationchange", onResize); };
-        }, []);
+            // Load local data on start
+            useEffect(() => {
+                const saved = localStorage.getItem('radha_user_v3');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    setUser(parsed);
+                    setCount(parsed.lifetime || 0);
+                }
+                fetchGlobalBoard();
+            }, []);
 
-        const [store, setStore] = useState(() => {
-          const s = loadStore(); if(!s.users){ s.users = {}; } if(!s.activeUserId){ s.activeUserId = null; } return s;
-        });
-        const active = store.activeUserId ? store.users?.[store.activeUserId] : null;
+            const fetchGlobalBoard = async () => {
+                try {
+                    const res = await fetch('/.netlify/functions/leaderboard');
+                    const data = await res.json();
+                    setGlobalBoard(data);
+                } catch (e) { console.log("Offline mode or function not ready"); }
+            };
 
-        // weekly rollover
-        useEffect(() => {
-          const now = new Date(); const wk = weekKeyOf(now);
-          const s = {...store, users:{...store.users}}; let changed=false;
-          for(const [uid,u] of Object.entries(s.users)){
-            if(u.weekKey !== wk){ s.users[uid] = {...u, weekKey:wk, weekly:0}; changed = true; }
-          }
-          if(changed){ setStore(s); saveStore(s); }
-          // eslint-disable-next-line
-        }, []);
+            const syncCountToCloud = async (id, amount) => {
+                try {
+                    await fetch('/.netlify/functions/increment', {
+                        method: 'POST',
+                        body: JSON.stringify({ user_id: id, amount: 1 })
+                    });
+                } catch (e) {}
+            };
 
-        const count = active?.lifetime ?? 0;
-        const within108 = count % 108;
-        const bead = within108 + 1;
-        const rounds = Math.floor(count / 108);
+            const handleCreateProfile = async () => {
+                if (!nameInput) return alert("Please enter name");
+                try {
+                    const res = await fetch('/.netlify/functions/create-profile', {
+                        method: 'POST',
+                        body: JSON.stringify({ name: nameInput, city: cityInput })
+                    });
+                    const newUser = await res.json();
+                    setUser(newUser);
+                    localStorage.setItem('radha_user_v3', JSON.stringify(newUser));
+                } catch (e) {
+                    // Fallback for offline/no backend
+                    const localUser = { id: Date.now(), display_name: nameInput, city: cityInput, lifetime: 0 };
+                    setUser(localUser);
+                    localStorage.setItem('radha_user_v3', JSON.stringify(localUser));
+                }
+            };
 
-        const stroke = 20; const r = (size - stroke) / 2; const C = 2 * Math.PI * r;
-        const dashOffset = C * (1 - within108 / 108);
+            const handleTap = (e) => {
+                if (!user) return;
+                
+                const newCount = count + 1;
+                setCount(newCount);
+                
+                // Haptics
+                if (navigator.vibrate) navigator.vibrate(10);
 
-        const spawnBurst = (x, y) => {
-          const layer = document.getElementById("bursts"); if(!layer) return;
-          const el = document.createElement("span"); el.className="burst"; el.textContent="राधा";
-          el.style.left = x+"px"; el.style.top = y+"px"; layer.appendChild(el);
-          el.addEventListener("animationend", ()=> el.remove(), {once:true});
-        };
-        const vibrate = (ms=10)=>{ try{ navigator.vibrate?.(ms);}catch{} };
+                // Visual Burst
+                const burst = document.createElement('div');
+                burst.className = 'burst';
+                burst.innerHTML = 'राधा';
+                burst.style.left = `${e.clientX || window.innerWidth/2}px`;
+                burst.style.top = `${e.clientY || window.innerHeight/2}px`;
+                document.body.appendChild(burst);
+                setTimeout(() => burst.remove(), 800);
 
-        const updateUser = (uid, mutator) => {
-          setStore(prev => {
-            const s = {...prev, users:{...prev.users}}; const u = s.users[uid]; if(!u) return prev;
-            const newU = mutator(u); s.users[uid] = newU; saveStore(s); return s;
-          });
-        };
+                // Sync
+                syncCountToCloud(user.id, 1);
+                
+                // Update Local
+                const updatedUser = { ...user, lifetime: newCount };
+                setUser(updatedUser);
+                localStorage.setItem('radha_user_v3', JSON.stringify(updatedUser));
+            };
 
-        // handle increment: also send analytics events
-        const handleInc = (x, y) => {
-          if(!active) return;
-          const predictedTotal = (active?.lifetime ?? 0) + 1;
+            return (
+                <div className="app-container" onClick={handleTap}>
+                    <header className="header">
+                        <h1>राधा</h1>
+                        <p style={{opacity: 0.6}}>Tap anywhere to chant</p>
+                    </header>
 
-          updateUser(store.activeUserId, (u) => {
-            const now = new Date(); const wk = weekKeyOf(now); const today = fmtDate(now);
-            const dayCounts = {...(u.dayCounts||{})}; dayCounts[today] = (dayCounts[today]||0)+1;
-            return {...u, lifetime:u.lifetime+1, weekly:(u.weekKey===wk?u.weekly:0)+1, weekKey:wk, dayCounts};
-          });
+                    {!user ? (
+                        <div className="glass-panel" onClick={e => e.stopPropagation()}>
+                            <div className="input-group">
+                                <h3>Create Profile to Track</h3>
+                                <input placeholder="Your Name" value={nameInput} onChange={e => setNameInput(e.target.value)} />
+                                <input placeholder="Your City" value={cityInput} onChange={e => setCityInput(e.target.value)} />
+                                <button onClick={handleCreateProfile}>Start Jaap</button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="counter-section">
+                            <div className="main-ring">
+                                <p style={{margin:0, opacity:0.6}}>Total Naam</p>
+                                <h2 className="count-big">{count}</h2>
+                                <p style={{margin:0, color: 'var(--secondary)'}}>Mala: {Math.floor(count / 108)}</p>
+                            </div>
+                        </div>
+                    )}
 
-          // Analytics events
-          gtmEvent('increment', {
-            user_id: store.activeUserId || null,
-            total: predictedTotal,
-            method: 'tap'
-          });
+                    {user && (
+                        <div className="glass-panel" onClick={e => e.stopPropagation()}>
+                            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
+                                <strong>Global Leaderboard</strong>
+                                <button style={{padding: '4px 8px', fontSize: '10px'}} onClick={fetchGlobalBoard}>Refresh</button>
+                            </div>
+                            <div className="leaderboard-tray">
+                                {globalBoard.length > 0 ? globalBoard.map((u, i) => (
+                                    <div className="user-row" key={i}>
+                                        <span>{i+1}. {u.display_name} <small style={{opacity:0.5}}>{u.city}</small></span>
+                                        <span className="pill">{u.weekly_total || 0}</span>
+                                    </div>
+                                )) : <p style={{fontSize: '12px', opacity:0.5}}>No global data found. Connect Supabase to see others.</p>}
+                            </div>
+                        </div>
+                    )}
 
-          if (predictedTotal % 108 === 0) {
-            gtmEvent('complete_108', {
-              user_id: store.activeUserId || null,
-              rounds: Math.floor(predictedTotal / 108)
-            });
-          }
-
-          vibrate(8); spawnBurst(x,y);
-        };
-
-        const handleDec = () => {
-          if(!active) return;
-          updateUser(store.activeUserId, (u) => {
-            const today = fmtDate(new Date()); const dayCounts = {...(u.dayCounts||{})};
-            if(u.lifetime>0){ if((dayCounts[today]||0)>0) dayCounts[today]-=1; return {...u, lifetime:u.lifetime-1, weekly:Math.max(0,u.weekly-1), dayCounts}; }
-            return u;
-          });
-          // track decrement (optional)
-          gtmEvent('decrement', { user_id: store.activeUserId || null });
-          vibrate(6);
-        };
-
-        const resetToMultiple108 = () => {
-          if(!active) return;
-          updateUser(store.activeUserId, (u) => {
-            const diff = u.lifetime % 108; if(diff===0) return u;
-            return {...u, lifetime:u.lifetime-diff, weekly:Math.max(0,(u.weekly||0)-diff)};
-          });
-          gtmEvent('reset_to_multiple_108', { user_id: store.activeUserId || null });
-        };
-
-        const resetAllForActive = () => {
-          if(!active) return;
-          if(confirm("Reset this user's counts? (lifetime, weekly & day history)")){
-            updateUser(store.activeUserId, (u)=> ({...u, lifetime:0, weekly:0, dayCounts:{}}));
-            gtmEvent('reset_user', { user_id: store.activeUserId || null });
-          }
-        };
-
-        const onScreenPointerDown = (e) => {
-          const x = (e.clientX ?? e?.touches?.[0]?.clientX ?? window.innerWidth/2);
-          const y = (e.clientY ?? e?.touches?.[0]?.clientY ?? window.innerHeight/2);
-          handleInc(x, y);
-        };
-        const stop = (e)=> e.stopPropagation();
-
-        const [name, setName] = useState("");
-        const [city, setCity] = useState("");
-        const makeId = () => Math.random().toString(36).slice(2,10);
-
-        const addUser = () => {
-          const nm = name.trim(); const ct = city.trim();
-          if(!nm) return alert("Please enter your name");
-          const id = makeId(); const wk = weekKeyOf(new Date());
-          const newUser = { id, name:nm, city:ct, createdAt: Date.now(), lifetime:0, weekly:0, weekKey:wk, dayCounts:{} };
-          const s = {...store, users:{...store.users, [id]:newUser}, activeUserId:id};
-          setStore(s); saveStore(s); setName(""); setCity("");
-          // set global small var for UPI/donate clicks
-          window.__rjc_activeUser = id;
-          // analytics
-          gtmEvent('create_profile', { user_id: id, name_length: nm.length });
-        };
-
-        const switchUser = (id) => {
-          const s = {...store, activeUserId:id}; setStore(s); saveStore(s);
-          window.__rjc_activeUser = id;
-          gtmEvent('switch_user', { user_id: id });
-        };
-
-        const deleteUser = (id) => {
-          if(!confirm("Delete this user? Data on this device will be removed.")) return;
-          const s = {...store, users:{...store.users}}; delete s.users[id];
-          if(s.activeUserId===id) s.activeUserId = Object.keys(s.users)[0] || null;
-          setStore(s); saveStore(s);
-          gtmEvent('delete_profile', { user_id: id });
-          if (s.activeUserId) window.__rjc_activeUser = s.activeUserId; else window.__rjc_activeUser = null;
-        };
-
-        const usersArr = useMemo(()=> Object.values(store.users||{}), [store.users]);
-        const weeklyBoard = useMemo(()=> [...usersArr].sort((a,b)=>(b.weekly||0)-(a.weekly||0)), [usersArr]);
-        const dayRows = useMemo(()=> active?.dayCounts ? Object.entries(active.dayCounts).sort((a,b)=> a[0]<b[0]?1:-1).slice(0,14) : [], [active]);
-
-        useEffect(() => {
-          const onKey = (e) => {
-            if (e.key === " " || e.key === "Enter") { e.preventDefault(); handleInc(window.innerWidth/2, window.innerHeight/2); }
-            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { handleDec(); }
-          };
-          window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey);
-        }, [active]);
-
-        const noUsers = (usersArr.length===0);
-
-        return (
-          <div className="screen" onPointerDown={onScreenPointerDown}>
-            <section className="wrap" aria-label="Counter and Controls">
-              <header style={{textAlign:"center"}}>
-                <h1 className="title" aria-label="Radha">राधा</h1>
-                <p className="hint">Kahin bhi tap karo — 1 mantra add hoga</p>
-              </header>
-
-              <section className="soft-card" onPointerDown={stop} aria-label="Profile">
-                {noUsers ? (
-                  <>
-                    <div className="row" role="group" aria-label="Create profile">
-                      <label className="visually-hidden" htmlFor="name">Name</label>
-                      <input id="name" className="input" autoComplete="name" placeholder="Name" value={name} onChange={e=>setName(e.target.value)} />
-                      <label className="visually-hidden" htmlFor="city">City</label>
-                      <input id="city" className="input" autoComplete="address-level2" placeholder="City" value={city} onChange={e=>setCity(e.target.value)} />
-                      <button onPointerDown={stop} onClick={addUser}>Create Profile</button>
+                    <div className="footer-tools" onClick={e => e.stopPropagation()}>
+                        <button onClick={() => {if(confirm("Reset?")) {setCount(0); localStorage.clear(); location.reload();}}}>Reset</button>
+                        <a href="upi://pay?pa=ankitgupta1181-5@oksbi&pn=Radha%20Jaap&cu=INR" style={{textDecoration:'none'}}>
+                            <button style={{background: 'var(--accent)', color: '#fff'}}>❤️ Donate</button>
+                        </a>
                     </div>
-                    <div className="footer">Har device par alag profiles save hoti hain (offline).</div>
-                  </>
-                ) : (
-                  <>
-                    <div className="row" style={{justifyContent:"space-between"}}>
-                      <div className="row" style={{justifyContent:"flex-start"}}>
-                        <span className="pill" aria-hidden="true">Active:</span>
-                        <label className="visually-hidden" htmlFor="activeUser">Active user</label>
-                        <select id="activeUser" className="input" value={store.activeUserId||""} onChange={e=>switchUser(e.target.value)} style={{minWidth:200}}>
-                          {usersArr.map(u=>(
-                            <option key={u.id} value={u.id}>{u.name}{u.city?` • ${u.city}`:""}</option>
-                          ))}
-                        </select>
-                      </div>
-                      {active && <button onPointerDown={stop} onClick={()=>deleteUser(active.id)} aria-label="Delete active user">Delete</button>}
-                    </div>
-                    {!active && <div className="footer">Please select a user above.</div>}
-                  </>
-                )}
-              </section>
+                </div>
+            );
+        }
 
-              <div className="ring-wrap" aria-hidden="true">
-                <svg viewBox={`0 0 ${size} ${size}`}>
-                  <circle cx={size/2} cy={size/2} r={r} stroke="var(--ring-bg)" strokeWidth={stroke} fill="none" />
-                  <circle
-                    cx={size/2}
-                    cy={size/2}
-                    r={r}
-                    stroke="url(#gradient)"
-                    strokeWidth={stroke}
-                    fill="none"
-                    strokeDasharray={C}
-                    strokeDashoffset={dashOffset}
-                    transform={`rotate(-90 ${size/2} ${size/2})`}
-                    strokeLinecap="round"
-                  />
-                  <defs>
-                    <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#f8961e" />
-                      <stop offset="100%" stopColor="#f94144" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-
-              <section className="stats soft-card" aria-live="polite">
-                {active ? (
-                  <>
-                    <div className="big" aria-label={`Bead ${bead} of 108`}>{bead} / 108</div>
-                    <div>Mala: {rounds}</div>
-                    <div>Naam: {active.lifetime}</div>
-                    <div>This Week: {active.weekly} <span className="footer">Auto reset every Monday</span></div>
-                  </>
-                ) : (<div>Please create/select a user to start.</div>)}
-              </section>
-
-              <div className="controls" onPointerDown={e=>e.stopPropagation()} role="group" aria-label="Controls">
-                <button onClick={handleDec} aria-label="Decrement by 1">-1</button>
-                <button onClick={resetToMultiple108}>Reset to multiple of 108</button>
-                <button onClick={resetAllForActive}>Reset User</button>
-              </div>
-
-              {active && (
-                <section className="soft-card" onPointerDown={e=>e.stopPropagation()} aria-label="History (Last 14 days)">
-                  <div className="row" style={{justifyContent:"space-between"}}>
-                    <strong>Last 14 days</strong>
-                    <span className="pill">{active.name}{active.city?` • ${active.city}`:""}</span>
-                  </div>
-                  {Object.keys(active.dayCounts||{}).length ? (
-                    <table className="table" role="table" aria-label="Daily history">
-                      <thead><tr><th scope="col">Date</th><th scope="col">Count</th></tr></thead>
-                      <tbody>
-                        {Object.entries(active.dayCounts).sort((a,b)=> a[0]<b[0]?1:-1).slice(0,14).map(([d,c])=>(
-                          <tr key={d}><td>{d}</td><td>{c}</td></tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : <div className="footer">No history yet — tap to begin.</div>}
-                </section>
-              )}
-
-              {Object.values(store.users||{}).length>1 && (
-                <section className="soft-card" onPointerDown={e=>e.stopPropagation()} aria-label="Weekly leaderboard (this device)">
-                  <div className="row" style={{justifyContent:"space-between"}}>
-                    <strong>Weekly Leaderboard</strong>
-                    <span className="pill">{weekKeyOf(new Date())}</span>
-                  </div>
-                  <table className="table" role="table">
-                    <thead><tr><th>#</th><th>User</th><th>City</th><th>Jaap (week)</th></tr></thead>
-                    <tbody>
-                      {[...Object.values(store.users)].sort((a,b)=>(b.weekly||0)-(a.weekly||0)).map((u,i)=>(
-                        <tr key={u.id}><td>{i+1}</td><td>{u.name}</td><td>{u.city||"-"}</td><td>{u.weekly||0}</td></tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <div className="footer">Note: Ye leaderboard sirf is device par stored users ke liye hai (global nahi).</div>
-                </section>
-              )}
-
-              <p className="footer">Space/Enter = +1 • Ctrl/⌘Z = -1 • Haptics on mobile</p>
-            </section>
-          </div>
-        );
-      }
-
-      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
-
-    <!-- UPI support button (fires donate_click event) -->
-    <a
-      class="upi-fab"
-      href="upi://pay?pa=ankitgupta1181-5@oksbi&pn=Radha%20Jaap%20Counter&tn=Dhanyavaad%20🙏&cu=INR"
-      title="Support via UPI"
-      aria-label="Support via UPI"
-      rel="nofollow"
-      onclick="gtmEvent('donate_click', { user_id: window.__rjc_activeUser || null });"
-    >❤️ UPI</a>
-
-    <!-- Service worker hint -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        // navigator.serviceWorker.register('/sw.js'); // enable after adding sw.js
-      }
-    </script>
-  </body>
+</body>
 </html>
