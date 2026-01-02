@@ -2,22 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Radha Naam Jaap — Global Counter</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Radha Naam Jaap Counter | Online Digital Mala & Mantra Tracker</title>
     
+    <meta name="title" content="Radha Naam Jaap Counter | Online Digital Mala & Mantra Tracker">
+    <meta name="description" content="A free, beautiful, and interactive Radha Naam Jaap counter. Track your daily mantras, complete 108 mala rounds, and join a global community of devotees.">
+    <meta name="keywords" content="Radha Naam, Jaap Counter, Digital Mala, Mantra Counter Online, Krishna Bhakti, Spiritual Tracker, Radha Radha, 108 Mala Counter">
+    <meta name="author" content="NaamJaa">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://naamjaa.netlify.app/">
+    <meta property="og:title" content="Radha Naam Jaap Counter - Digital Mantra Mala">
+    <meta property="og:description" content="Count your Radha Naam Jaap with this beautiful, interactive digital counter. Sync globally and track your spiritual progress.">
+    <meta property="og:image" content="https://naamjaa.netlify.app/og-image.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://naamjaa.netlify.app/">
+    <meta property="twitter:title" content="Radha Naam Jaap Counter">
+    <meta property="twitter:description" content="Beautiful interactive digital mala for Radha Naam jaap. Start your spiritual journey today.">
+    <meta property="twitter:image" content="https://naamjaa.netlify.app/og-image.png">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f3722c" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/manifest.json" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Radha Naam Jaap Counter",
+      "alternateName": "NaamJaa",
+      "url": "https://naamjaa.netlify.app/",
+      "description": "Interactive digital counter for Radha Naam Jaap with global leaderboard and mala tracking.",
+      "applicationCategory": "Spiritual/Utility",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      }
+    }
+    </script>
+
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg: #0a0a0c;
-            --card: rgba(255, 255, 255, 0.06);
-            --primary: #ff7043;
+            --primary: #f3722c;
             --secondary: #f9c74f;
+            --bg: #0a0a0c;
+            --glass: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.12);
             --text: #ffffff;
-            --accent: #f94144;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -25,271 +66,308 @@
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at center, #1a0f00 0%, #050505 100%);
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 50% -20%, #4d2a00 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, #1a0a00 0%, transparent 30%);
             color: var(--text);
             height: 100dvh;
-            overflow: hidden; /* Prevents bounce scrolling */
+            display: flex;
+            justify-content: center;
+            overflow-x: hidden;
         }
 
-        /* The Main Tap Area */
-        .app-container {
-            height: 100dvh;
+        #root { width: 100%; max-width: 500px; height: 100%; }
+
+        .app-layout {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 20px;
+            gap: 20px;
+            position: relative;
+        }
+
+        .jaap-circle-area {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
-            position: relative;
-        }
-
-        .glass-panel {
-            background: var(--card);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 20px;
-            width: 100%;
-            max-width: 450px;
-        }
-
-        .header { text-align: center; margin-top: 20px; }
-        .header h1 { 
-            margin: 0; font-size: 3rem; color: var(--accent); 
-            text-shadow: 0 0 20px rgba(249, 65, 68, 0.4);
-        }
-
-        /* Counter Circle */
-        .counter-section {
-            position: relative;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            flex-grow: 1;
-            width: 100%;
+            cursor: pointer;
         }
 
-        .main-ring {
-            width: min(75vw, 320px);
-            height: min(75vw, 320px);
+        .main-display {
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
+            background: var(--glass);
+            border: 2px solid var(--border);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.03);
-            border: 4px solid var(--card);
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            transition: transform 0.1s active;
+            box-shadow: 0 0 60px rgba(243, 114, 44, 0.15);
+            transition: transform 0.1s ease;
+            position: relative;
+            z-index: 2;
         }
 
-        .count-big {
-            font-size: 5rem;
+        .main-display:active { transform: scale(0.96); }
+
+        .mantra-text {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin: 0;
+            text-shadow: 0 0 15px rgba(243, 114, 44, 0.5);
+        }
+
+        .count-number {
+            font-size: 4.5rem;
             font-weight: 900;
             margin: 0;
-            background: linear-gradient(180deg, #fff 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            line-height: 1;
         }
 
-        /* Leaderboard styling */
-        .leaderboard-tray {
-            max-height: 30vh;
-            overflow-y: auto;
-            margin-top: 15px;
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 20px;
         }
 
-        .user-row {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .stat-box p { margin: 0; font-size: 0.8rem; opacity: 0.6; text-transform: uppercase; }
+        .stat-box h3 { margin: 5px 0 0 0; font-size: 1.4rem; color: var(--secondary); }
+
+        .leaderboard-section { flex: 0.8; overflow-y: auto; }
+        .user-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.9rem;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
         }
 
-        .pill {
-            background: var(--accent);
+        .rank-pill {
+            background: var(--primary);
+            color: white;
             padding: 2px 10px;
-            border-radius: 10px;
+            border-radius: 8px;
             font-weight: bold;
+            font-size: 0.8rem;
         }
 
+        .btn-group { display: flex; gap: 10px; justify-content: center; }
         button {
-            background: var(--text);
-            color: #000;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: bold;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 14px;
             cursor: pointer;
-            margin: 5px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        button:hover { background: rgba(255,255,255,0.1); }
+        .btn-primary { background: var(--primary); border: none; }
+
+        .input-style {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            padding: 14px;
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 10px;
         }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        input {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 12px;
-            border-radius: 10px;
-            color: #fff;
-            outline: none;
-        }
-
-        .burst {
+        .radha-burst {
             position: absolute;
-            pointer-events: none;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
             color: var(--secondary);
+            pointer-events: none;
+            z-index: 10;
+            animation: burstEffect 1s forwards;
+        }
+
+        @keyframes burstEffect {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-120px) scale(2); opacity: 0; }
+        }
+
+        .fab-donate {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 30px;
+            text-decoration: none;
             font-weight: 900;
-            animation: flyUp 0.8s ease-out forwards;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            z-index: 100;
         }
-
-        @keyframes flyUp {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-100px) scale(1.5); }
-        }
-
-        .footer-tools { margin-bottom: 20px; display: flex; gap: 10px; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+        const { useState, useEffect, useCallback } = React;
 
         function App() {
             const [count, setCount] = useState(0);
             const [user, setUser] = useState(null);
-            const [globalBoard, setGlobalBoard] = useState([]);
-            const [nameInput, setNameInput] = useState("");
-            const [cityInput, setCityInput] = useState("");
+            const [globalData, setGlobalData] = useState([]);
+            const [name, setName] = useState("");
+            const [city, setCity] = useState("");
 
-            // Load local data on start
             useEffect(() => {
-                const saved = localStorage.getItem('radha_user_v3');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
+                const savedUser = localStorage.getItem('radha_jaap_user');
+                if (savedUser) {
+                    const parsed = JSON.parse(savedUser);
                     setUser(parsed);
                     setCount(parsed.lifetime || 0);
                 }
-                fetchGlobalBoard();
+                fetchGlobalData();
             }, []);
 
-            const fetchGlobalBoard = async () => {
+            const fetchGlobalData = async () => {
                 try {
                     const res = await fetch('/.netlify/functions/leaderboard');
-                    const data = await res.json();
-                    setGlobalBoard(data);
-                } catch (e) { console.log("Offline mode or function not ready"); }
+                    if (res.ok) setGlobalData(await res.json());
+                } catch (e) { console.log("Backend offline."); }
             };
 
-            const syncCountToCloud = async (id, amount) => {
-                try {
-                    await fetch('/.netlify/functions/increment', {
-                        method: 'POST',
-                        body: JSON.stringify({ user_id: id, amount: 1 })
-                    });
-                } catch (e) {}
-            };
-
-            const handleCreateProfile = async () => {
-                if (!nameInput) return alert("Please enter name");
-                try {
-                    const res = await fetch('/.netlify/functions/create-profile', {
-                        method: 'POST',
-                        body: JSON.stringify({ name: nameInput, city: cityInput })
-                    });
-                    const newUser = await res.json();
-                    setUser(newUser);
-                    localStorage.setItem('radha_user_v3', JSON.stringify(newUser));
-                } catch (e) {
-                    // Fallback for offline/no backend
-                    const localUser = { id: Date.now(), display_name: nameInput, city: cityInput, lifetime: 0 };
-                    setUser(localUser);
-                    localStorage.setItem('radha_user_v3', JSON.stringify(localUser));
-                }
-            };
-
-            const handleTap = (e) => {
+            const handleIncrement = useCallback((e) => {
                 if (!user) return;
                 
-                const newCount = count + 1;
-                setCount(newCount);
-                
-                // Haptics
                 if (navigator.vibrate) navigator.vibrate(10);
 
-                // Visual Burst
-                const burst = document.createElement('div');
-                burst.className = 'burst';
-                burst.innerHTML = 'राधा';
-                burst.style.left = `${e.clientX || window.innerWidth/2}px`;
-                burst.style.top = `${e.clientY || window.innerHeight/2}px`;
-                document.body.appendChild(burst);
-                setTimeout(() => burst.remove(), 800);
+                setCount(prev => {
+                    const next = prev + 1;
+                    const updated = { ...user, lifetime: next };
+                    localStorage.setItem('radha_jaap_user', JSON.stringify(updated));
+                    return next;
+                });
 
-                // Sync
-                syncCountToCloud(user.id, 1);
+                const burst = document.createElement('div');
+                burst.className = 'radha-burst';
+                burst.innerText = 'राधा';
+                const x = e?.clientX || window.innerWidth / 2;
+                const y = e?.clientY || window.innerHeight / 2;
+                burst.style.left = `${x - 20}px`;
+                burst.style.top = `${y - 20}px`;
+                document.body.appendChild(burst);
+                setTimeout(() => burst.remove(), 1000);
+
+                fetch('/.netlify/functions/increment', {
+                    method: 'POST',
+                    body: JSON.stringify({ user_id: user.id, amount: 1 })
+                }).catch(() => {});
+            }, [user]);
+
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.key === " " || e.key === "Enter") {
+                        e.preventDefault();
+                        handleIncrement();
+                    }
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, [handleIncrement]);
+
+            const createProfile = async () => {
+                if (!name.trim()) return alert("Please enter your name");
+                const userData = { 
+                    id: 'u_' + Math.random().toString(36).substr(2, 9), 
+                    display_name: name, 
+                    city: city || 'Braj', 
+                    lifetime: 0 
+                };
+                setUser(userData);
+                localStorage.setItem('radha_jaap_user', JSON.stringify(userData));
                 
-                // Update Local
-                const updatedUser = { ...user, lifetime: newCount };
-                setUser(updatedUser);
-                localStorage.setItem('radha_user_v3', JSON.stringify(updatedUser));
+                fetch('/.netlify/functions/create-profile', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, city: city || 'Braj' })
+                }).catch(() => {});
             };
 
-            return (
-                <div className="app-container" onClick={handleTap}>
-                    <header className="header">
-                        <h1>राधा</h1>
-                        <p style={{opacity: 0.6}}>Tap anywhere to chant</p>
-                    </header>
-
-                    {!user ? (
-                        <div className="glass-panel" onClick={e => e.stopPropagation()}>
-                            <div className="input-group">
-                                <h3>Create Profile to Track</h3>
-                                <input placeholder="Your Name" value={nameInput} onChange={e => setNameInput(e.target.value)} />
-                                <input placeholder="Your City" value={cityInput} onChange={e => setCityInput(e.target.value)} />
-                                <button onClick={handleCreateProfile}>Start Jaap</button>
-                            </div>
+            if (!user) {
+                return (
+                    <div className="app-layout">
+                        <div style={{textAlign:'center', marginTop: '40px'}}>
+                            <h1 style={{fontFamily:'Cinzel', color:'var(--primary)', fontSize:'3.5rem', margin:0}}>राधा</h1>
+                            <p style={{opacity:0.6, letterSpacing: '2px'}}>Digital Jaap Counter</p>
                         </div>
-                    ) : (
-                        <div className="counter-section">
-                            <div className="main-ring">
-                                <p style={{margin:0, opacity:0.6}}>Total Naam</p>
-                                <h2 className="count-big">{count}</h2>
-                                <p style={{margin:0, color: 'var(--secondary)'}}>Mala: {Math.floor(count / 108)}</p>
-                            </div>
+                        <div className="card">
+                            <h2 style={{fontSize:'1.2rem', marginBottom:'20px', textAlign:'center'}}>Create Your Profile</h2>
+                            <input className="input-style" placeholder="Your Name" value={name} onChange={e=>setName(e.target.value)} />
+                            <input className="input-style" placeholder="Your City" value={city} onChange={e=>setCity(e.target.value)} />
+                            <button className="btn-primary" style={{width:'100%', marginTop: '10px'}} onClick={createProfile}>Enter Darbar</button>
                         </div>
-                    )}
-
-                    {user && (
-                        <div className="glass-panel" onClick={e => e.stopPropagation()}>
-                            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
-                                <strong>Global Leaderboard</strong>
-                                <button style={{padding: '4px 8px', fontSize: '10px'}} onClick={fetchGlobalBoard}>Refresh</button>
-                            </div>
-                            <div className="leaderboard-tray">
-                                {globalBoard.length > 0 ? globalBoard.map((u, i) => (
-                                    <div className="user-row" key={i}>
-                                        <span>{i+1}. {u.display_name} <small style={{opacity:0.5}}>{u.city}</small></span>
-                                        <span className="pill">{u.weekly_total || 0}</span>
-                                    </div>
-                                )) : <p style={{fontSize: '12px', opacity:0.5}}>No global data found. Connect Supabase to see others.</p>}
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="footer-tools" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => {if(confirm("Reset?")) {setCount(0); localStorage.clear(); location.reload();}}}>Reset</button>
-                        <a href="upi://pay?pa=ankitgupta1181-5@oksbi&pn=Radha%20Jaap&cu=INR" style={{textDecoration:'none'}}>
-                            <button style={{background: 'var(--accent)', color: '#fff'}}>❤️ Donate</button>
-                        </a>
                     </div>
+                );
+            }
+
+            return (
+                <div className="app-layout">
+                    <div className="card stats-grid">
+                        <div className="stat-box">
+                            <p>Lifetime</p>
+                            <h3>{count}</h3>
+                        </div>
+                        <div className="stat-box">
+                            <p>Mala Rounds</p>
+                            <h3>{Math.floor(count / 108)}</h3>
+                        </div>
+                    </div>
+
+                    <div className="jaap-circle-area" onClick={handleIncrement}>
+                        <div className="main-display">
+                            <h1 className="mantra-text">राधा</h1>
+                            <h2 className="count-number">{count % 108}</h2>
+                            <p style={{margin:0, opacity:0.6, fontSize: '0.9rem'}}>Bead of 108</p>
+                        </div>
+                    </div>
+
+                    <div className="card leaderboard-section">
+                        <div style={{display:'flex', justifyContent:'space-between', marginBottom: '15px'}}>
+                            <h4 style={{margin:0}}>Global Leaderboard</h4>
+                            <small style={{color:'var(--secondary)'}}>Live</small>
+                        </div>
+                        {globalData.length > 0 ? globalData.map((u, i) => (
+                            <div className="user-item" key={u.id}>
+                                <div>
+                                    <span style={{fontWeight:'700'}}>{u.display_name}</span>
+                                    <div style={{fontSize:'0.7rem', opacity:0.5}}>{u.city}</div>
+                                </div>
+                                <span className="rank-pill">{u.weekly_total}</span>
+                            </div>
+                        )) : (
+                            <p style={{fontSize:'0.8rem', opacity:0.4, textAlign:'center'}}>Syncing global devotees...</p>
+                        )}
+                    </div>
+
+                    <div className="btn-group">
+                        <button onClick={() => setCount(prev => Math.max(0, prev - 1))}>Error -1</button>
+                        <button onClick={() => {if(confirm("Logout?")) {localStorage.clear(); location.reload();}}}>Reset All</button>
+                    </div>
+
+                    <a href="upi://pay?pa=ankitgupta1181-5@oksbi&pn=Radha%20Jaap&cu=INR" className="fab-donate">❤️ SUPPORT</a>
                 </div>
             );
         }
