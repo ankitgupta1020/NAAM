@@ -256,7 +256,7 @@ function spawnPetal(x, y) {
 function spawnBurst(x, y, n) {
     const el = document.createElement('div');
     el.className = 'burst';
-    const msgs = ['राधा','॥राधे॥','हरे','जय','🙏','✨','🪷'];
+    const msgs = ['राधा'];
     el.innerText = n % 27 === 0 ? '🪷 राधे' : msgs[n % msgs.length];
     const cols = ['#f97316','#fbbf24','#fb7185','#fef3c7'];
     el.style.cssText = `font-size:${1.1+Math.random()*.8}rem;color:${cols[n%4]};left:${x-20}px;top:${y-20}px`;
