@@ -3,1186 +3,688 @@
 <head>
     <meta charset="utf-8" />
     <title>Radha Naam Jaap Counter | Online Digital Mala & Mantra Tracker 🙏</title>
-    
     <meta name="title" content="Radha Naam Jaap Counter | Free Digital Mala & Online Mantra Tracker">
     <meta name="description" content="Count Radha Naam Jaap with our free, beautiful digital mala counter. Track 108-bead mala rounds, join a global leaderboard of devotees, and deepen your daily bhakti practice. No app needed — works in any browser.">
     <meta name="keywords" content="Radha Naam Jaap, Digital Mala Counter, Online Jaap Counter, Mantra Counter, Krishna Bhakti, Radha Radha, 108 Mala, Spiritual Tracker, Free Mala Counter, Japmala Online, Bhakti App, Naam Jap, Hare Krishna, Vrindavan Bhakti">
     <meta name="author" content="NaamJaa">
     <meta name="robots" content="index, follow">
-    <meta name="language" content="English">
-    <meta name="revisit-after" content="3 days">
-    <meta name="category" content="spirituality, religion, meditation">
     <link rel="canonical" href="https://naamjaa.netlify.app/" />
-
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://naamjaa.netlify.app/">
     <meta property="og:title" content="Radha Naam Jaap Counter — Free Digital Mala & Mantra Tracker">
-    <meta property="og:description" content="Count your Radha Naam Jaap with a stunning digital mala. Track 108-bead rounds, see your lifetime count, and join devotees worldwide. Free, beautiful, works on any device.">
+    <meta property="og:description" content="Count your Radha Naam Jaap with a stunning digital mala. Track 108-bead rounds, live global counter, and join devotees worldwide.">
     <meta property="og:image" content="https://naamjaa.netlify.app/og-image.png">
-    <meta property="og:site_name" content="NaamJaa">
-    <meta property="og:locale" content="en_IN">
-
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://naamjaa.netlify.app/">
-    <meta property="twitter:title" content="Radha Naam Jaap Counter — Digital Mala Online">
-    <meta property="twitter:description" content="Beautiful interactive digital mala for Radha Naam jaap. 108-bead tracking, global leaderboard, and more. Start your spiritual journey today — free forever.">
-    <meta property="twitter:image" content="https://naamjaa.netlify.app/og-image.png">
-
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#c2410c" />
-    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="NaamJaa">
     <link rel="manifest" href="/manifest.json" />
 
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Radha Naam Jaap Counter",
-      "alternateName": ["NaamJaa", "Digital Mala Counter", "Online Jaap Counter"],
-      "url": "https://naamjaa.netlify.app/",
-      "description": "Free interactive digital counter for Radha Naam Jaap. Features 108-bead mala tracking, lifetime count, global leaderboard, and beautiful animations for a deeply immersive spiritual experience.",
-      "applicationCategory": "LifestyleApplication",
-      "operatingSystem": "All",
-      "browserRequirements": "Requires JavaScript",
-      "inLanguage": ["hi", "en"],
-      "isAccessibleForFree": true,
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
-      "creator": { "@type": "Organization", "name": "NaamJaa" },
-      "keywords": "Radha Naam, Jaap Counter, Digital Mala, Mantra Tracker, Bhakti",
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5", "reviewCount": "108" }
-    }
+    {"@context":"https://schema.org","@type":"WebApplication","name":"Radha Naam Jaap Counter","url":"https://naamjaa.netlify.app/","description":"Free interactive digital counter for Radha Naam Jaap with real-time global counter, live leaderboard, and 108-bead mala tracking.","applicationCategory":"LifestyleApplication","operatingSystem":"All","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"INR"}}
     </script>
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is Radha Naam Jaap?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Radha Naam Jaap is the devotional practice of repeatedly chanting the holy name of Radha Rani. Each repetition of 'Radha' is counted as one jaap. A complete mala consists of 108 jaaps." }
-        },
-        {
-          "@type": "Question",
-          "name": "How does the digital mala counter work?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Simply tap the glowing Radha circle or press Space/Enter to count each mantra. The counter tracks your progress through 108 beads per mala and accumulates your lifetime total." }
-        },
-        {
-          "@type": "Question",
-          "name": "Why 108 beads in a mala?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The number 108 is considered sacred in Hindu tradition. It represents the 108 Upanishads, the 108 names of deities, and cosmic connections between the Sun, Moon, and Earth." }
-        }
-      ]
-    }
-    </script>
+    <!-- ✅ Firebase SDK (compat — no npm needed, works directly in browser) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Tiro+Devanagari+Hindi:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,700;0,9..40,900;1,9..40,300&display=swap" rel="stylesheet">
-
+    <!-- React -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Tiro+Devanagari+Hindi&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,700;9..40,900&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --saffron:    #f97316;
+            --saffron:      #f97316;
             --saffron-deep: #c2410c;
-            --gold:       #fbbf24;
-            --gold-light: #fef3c7;
-            --kumkum:     #dc2626;
-            --rose:       #fb7185;
-            --bg:         #080608;
-            --surface:    #100d10;
-            --glass:      rgba(251, 191, 36, 0.06);
-            --glass-hover:rgba(251, 191, 36, 0.12);
-            --border:     rgba(251, 191, 36, 0.18);
-            --border-hot: rgba(249, 115, 22, 0.4);
-            --text:       #fef9f0;
-            --muted:      rgba(254, 249, 240, 0.45);
-            --r: 24px;
+            --gold:         #fbbf24;
+            --gold-light:   #fef3c7;
+            --kumkum:       #dc2626;
+            --rose:         #fb7185;
+            --teal:         #2dd4bf;
+            --bg:           #080608;
+            --glass:        rgba(251,191,36,0.06);
+            --glass-h:      rgba(251,191,36,0.11);
+            --border:       rgba(251,191,36,0.16);
+            --border-hot:   rgba(249,115,22,0.4);
+            --text:         #fef9f0;
+            --muted:        rgba(254,249,240,0.42);
+            --r:            22px;
         }
+        *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
+        body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(249,115,22,.22) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 80% 80%,rgba(220,38,38,.12) 0%,transparent 50%),radial-gradient(ellipse 50% 40% at 10% 60%,rgba(251,191,36,.07) 0%,transparent 50%);pointer-events:none;z-index:0;animation:bgP 8s ease-in-out infinite alternate}
+        @keyframes bgP{from{opacity:.8}to{opacity:1.2}}
+        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5}
+        #root{position:relative;z-index:1}
 
-        *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        .petal{position:fixed;pointer-events:none;z-index:0;opacity:0;animation:pF linear forwards}
+        @keyframes pF{0%{opacity:0;transform:translateY(-20px) rotate(0) scale(1)}10%{opacity:.7}90%{opacity:.3}100%{opacity:0;transform:translateY(100vh) rotate(720deg) scale(.5)}}
 
-        html { scroll-behavior: smooth; }
+        .shell{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:env(safe-area-inset-top,18px) 17px env(safe-area-inset-bottom,28px);gap:13px}
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100dvh;
-            overflow-x: hidden;
-            position: relative;
-        }
+        .hdr{display:flex;align-items:center;justify-content:space-between;padding-top:4px}
+        .hdr-brand{display:flex;align-items:center;gap:8px}
+        .lotus{font-size:1.4rem;animation:lF 4s ease-in-out infinite}
+        @keyframes lF{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-4px) rotate(4deg)}}
+        .brand{font-family:'Yatra One',system-ui;font-size:1.1rem;color:var(--gold)}
+        .online-pill{display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);border-radius:99px;padding:5px 12px;font-size:.7rem;font-weight:700;color:var(--teal);letter-spacing:.5px;transition:all .5s}
+        .odot{width:6px;height:6px;border-radius:50%;animation:lP 1.5s ease-in-out infinite}
+        @keyframes lP{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
 
-        /* Animated gradient background */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 70% 50% at 50% -10%, rgba(249,115,22,0.22) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 30% at 80% 80%, rgba(220,38,38,0.12) 0%, transparent 50%),
-                radial-gradient(ellipse 50% 40% at 10% 60%, rgba(251,191,36,0.07) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-            animation: bgPulse 8s ease-in-out infinite alternate;
-        }
+        /* Global banner */
+        .gb{background:linear-gradient(135deg,rgba(249,115,22,.12),rgba(220,38,38,.08));border:1px solid var(--border-hot);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+        .gb::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--saffron),var(--gold),var(--saffron),transparent);opacity:.7}
+        .gb-label{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:4px}
+        .gb-count{font-size:2rem;font-weight:900;color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:-1px;line-height:1;transition:all .3s ease}
+        .gb-sub{font-size:.68rem;color:var(--muted);margin-top:2px}
+        .gb-icon{font-size:2.4rem;opacity:.6}
 
-        @keyframes bgPulse {
-            from { opacity: 0.8; }
-            to { opacity: 1.2; }
-        }
+        /* Stats */
+        .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+        .sc{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:13px 10px;text-align:center;position:relative;overflow:hidden;transition:border-color .3s,background .3s}
+        .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--saffron),var(--gold));opacity:.5}
+        .sc:hover{background:var(--glass-h);border-color:var(--border-hot)}
+        .sl{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted)}
+        .sv{font-size:1.5rem;font-weight:900;color:var(--gold);line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums}
 
-        /* Noise texture overlay */
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.6;
-        }
+        /* Mala arc */
+        .arc{display:flex;flex-direction:column;align-items:center;margin-top:-4px}
+        .arc svg{width:320px;height:155px}
 
-        #root { position: relative; z-index: 1; }
+        /* Orb */
+        .orb-wrap{display:flex;justify-content:center;align-items:center;position:relative;margin-top:-18px}
+        .gr1{position:absolute;width:310px;height:310px;border-radius:50%;background:conic-gradient(from 0deg,rgba(249,115,22,0) 0%,rgba(249,115,22,.15) 25%,rgba(251,191,36,.2) 50%,rgba(220,38,38,.12) 75%,rgba(249,115,22,0) 100%);animation:spin 6s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .gr2{position:absolute;width:280px;height:280px;border-radius:50%;border:1.5px solid rgba(251,191,36,.18);animation:spin 4s linear infinite reverse}
+        .jaap-btn{position:relative;width:250px;height:250px;border-radius:50%;cursor:pointer;border:none;outline:none;background:none;z-index:5;user-select:none;-webkit-user-select:none}
+        .orb-in{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(254,249,240,.12) 0%,transparent 45%),radial-gradient(circle at 65% 65%,rgba(220,38,38,.08) 0%,transparent 50%),linear-gradient(145deg,rgba(249,115,22,.15) 0%,rgba(16,13,16,.9) 60%,rgba(16,13,16,1) 100%);border:1.5px solid rgba(251,191,36,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 0 0 1px rgba(249,115,22,.1),0 0 30px rgba(249,115,22,.15),0 0 80px rgba(249,115,22,.08),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .08s cubic-bezier(.34,1.56,.64,1),box-shadow .15s;position:relative;overflow:hidden}
+        .orb-in::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent 0deg,rgba(251,191,36,.06) 60deg,transparent 120deg);animation:spin 3s linear infinite}
+        .jaap-btn:active .orb-in{transform:scale(.93);box-shadow:0 0 0 1px rgba(249,115,22,.3),0 0 50px rgba(249,115,22,.4),inset 0 1px 0 rgba(255,255,255,.12)}
+        .or{font-family:'Tiro Devanagari Hindi',serif;font-size:3.8rem;color:var(--saffron);text-shadow:0 0 20px rgba(249,115,22,.8),0 0 40px rgba(249,115,22,.4);line-height:1;position:relative;z-index:1;animation:rG 2s ease-in-out infinite alternate}
+        @keyframes rG{from{text-shadow:0 0 20px rgba(249,115,22,.8),0 0 40px rgba(249,115,22,.4)}to{text-shadow:0 0 30px rgba(251,191,36,.9),0 0 60px rgba(249,115,22,.5),0 0 100px rgba(249,115,22,.25)}}
+        .oc{font-size:3.5rem;font-weight:900;line-height:1;color:var(--text);font-variant-numeric:tabular-nums;position:relative;z-index:1;letter-spacing:-2px}
+        .os{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--muted);position:relative;z-index:1;margin-top:2px}
+        .hint{font-size:.7rem;color:var(--muted);letter-spacing:1px;text-align:center;animation:hP 2s ease-in-out infinite}
+        @keyframes hP{0%,100%{opacity:.3}50%{opacity:.7}}
 
-        /* Lotus petals floating */
-        .petal {
-            position: fixed;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0;
-            animation: petalFall linear forwards;
-        }
-        @keyframes petalFall {
-            0%   { opacity: 0; transform: translateY(-20px) rotate(0deg) scale(1); }
-            10%  { opacity: 0.7; }
-            90%  { opacity: 0.3; }
-            100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(0.5); }
-        }
+        /* Progress */
+        .prog{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:14px 17px;position:relative;overflow:hidden}
+        .prog::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--saffron),var(--gold),var(--saffron),transparent);opacity:.4}
+        .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .pt{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)}
+        .pp{font-size:.8rem;font-weight:900;color:var(--gold)}
+        .ptrack{height:7px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden}
+        .pfill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--saffron-deep),var(--saffron),var(--gold));box-shadow:0 0 12px rgba(249,115,22,.6);transition:width .4s cubic-bezier(.22,1,.36,1);position:relative}
+        .pfill::after{content:'';position:absolute;right:-1px;top:0;bottom:0;width:6px;background:white;border-radius:50%;box-shadow:0 0 8px rgba(255,255,255,.8);opacity:.8}
+        .beads{display:flex;gap:3px;flex-wrap:wrap;margin-top:9px}
+        .bd{width:8px;height:8px;border-radius:50%;border:1px solid rgba(251,191,36,.13);background:rgba(255,255,255,.03);transition:background .2s,box-shadow .2s,transform .15s}
+        .bd.f{background:linear-gradient(135deg,var(--saffron),var(--gold));border-color:var(--gold);box-shadow:0 0 5px rgba(249,115,22,.4)}
+        .bd.c{background:var(--gold-light);border-color:var(--gold-light);box-shadow:0 0 10px rgba(251,191,36,.8);transform:scale(1.4);animation:bP .5s ease}
+        @keyframes bP{0%{transform:scale(1)}50%{transform:scale(1.9);box-shadow:0 0 20px rgba(251,191,36,1)}100%{transform:scale(1.4)}}
 
-        /* ─── LAYOUT ─── */
-        .app-shell {
-            max-width: 480px;
-            margin: 0 auto;
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            padding: env(safe-area-inset-top, 20px) 18px env(safe-area-inset-bottom, 20px);
-            gap: 16px;
-        }
+        /* Activity feed */
+        .act{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:13px 16px;position:relative;overflow:hidden}
+        .act::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--rose),transparent);opacity:.5}
+        .act-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+        .act-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)}
+        .feed{display:flex;flex-direction:column;gap:6px}
+        .feed-item{display:flex;align-items:center;gap:10px;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid rgba(255,255,255,.04);animation:sI .4s cubic-bezier(.22,1,.36,1) both}
+        @keyframes sI{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+        .ava{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:900;color:white;flex-shrink:0}
+        .ai{flex:1;min-width:0}
+        .an{font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .ad{font-size:.65rem;color:var(--muted)}
+        .abadge{background:linear-gradient(135deg,var(--saffron-deep),var(--kumkum));border-radius:8px;padding:3px 8px;font-size:.68rem;font-weight:900;color:white;white-space:nowrap}
 
-        /* ─── HEADER ─── */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 8px;
-        }
-        .header-brand {
-            display: flex; align-items: center; gap: 10px;
-        }
-        .header-brand .lotus { font-size: 1.5rem; animation: lotusRotate 6s ease-in-out infinite; }
-        @keyframes lotusRotate { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
-        .brand-name {
-            font-family: 'Yatra One', system-ui;
-            font-size: 1.1rem;
-            color: var(--gold);
-            letter-spacing: 0.5px;
-        }
-        .streak-badge {
-            background: linear-gradient(135deg, var(--saffron-deep), var(--kumkum));
-            border-radius: 20px;
-            padding: 5px 14px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            display: flex; align-items: center; gap: 5px;
-            box-shadow: 0 4px 15px rgba(220,38,38,0.3);
-        }
+        /* Leaderboard */
+        .lb{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden}
+        .lb::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--kumkum),var(--saffron),transparent);opacity:.4}
+        .lb-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
+        .lb-t{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)}
+        .lb-live{display:flex;align-items:center;gap:5px;font-size:.68rem;font-weight:700;color:var(--rose)}
+        .ldot{width:6px;height:6px;border-radius:50%;animation:lP 1.5s ease-in-out infinite}
+        .lbr{display:flex;align-items:center;gap:11px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+        .lbr:last-child{border-bottom:none}
+        .lrank{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:900;flex-shrink:0}
+        .r1{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#1a0a00}
+        .r2{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff}
+        .r3{background:linear-gradient(135deg,#c2410c,#b45309);color:#fff}
+        .rn{background:rgba(255,255,255,.06);color:var(--muted)}
+        .li{flex:1;min-width:0}
+        .ln{font-weight:700;font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .lc-city{font-size:.66rem;color:var(--muted);margin-top:1px}
+        .lc{font-size:.92rem;font-weight:900;color:var(--gold);font-variant-numeric:tabular-nums}
 
-        /* ─── STATS ROW ─── */
-        .stats-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-        }
-        .stat-card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            padding: 14px 10px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.3s, background 0.3s;
-        }
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--saffron), var(--gold));
-            opacity: 0.6;
-            border-radius: 2px 2px 0 0;
-        }
-        .stat-card:hover { background: var(--glass-hover); border-color: var(--border-hot); }
-        .stat-label {
-            font-size: 0.68rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: var(--muted);
-        }
-        .stat-value {
-            font-size: 1.6rem;
-            font-weight: 900;
-            color: var(--gold);
-            line-height: 1.1;
-            margin-top: 4px;
-            font-variant-numeric: tabular-nums;
-        }
+        /* Controls */
+        .ctrls{display:flex;gap:10px;padding-bottom:4px}
+        .cbtn{flex:1;background:var(--glass);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;transition:background .2s,border-color .2s,transform .1s}
+        .cbtn:hover{background:var(--glass-h);border-color:var(--border-hot)}
+        .cbtn:active{transform:scale(.97)}
+        .cbtn.d:hover{background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.4);color:var(--rose)}
 
-        /* ─── MALA PROGRESS ARC ─── */
-        .mala-arc-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0;
-            margin-top: -4px;
-        }
-        .mala-svg-container {
-            width: 320px;
-            height: 160px;
-            position: relative;
-        }
-        .mala-svg-container svg { width: 100%; height: 100%; }
+        /* FAB */
+        .fab{position:fixed;bottom:22px;right:17px;background:linear-gradient(135deg,#fff5e4,#fff);color:#7c2d12;padding:10px 18px;border-radius:99px;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:900;font-size:.78rem;box-shadow:0 8px 30px rgba(0,0,0,.35),0 0 0 1px rgba(249,115,22,.2);z-index:100;transition:transform .2s,box-shadow .2s;display:flex;align-items:center;gap:5px}
+        .fab:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
 
-        /* ─── JAAP ORBS ─── */
-        .jaap-orb-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            margin-top: -20px;
-        }
+        /* Burst */
+        .burst{position:fixed;font-family:'Tiro Devanagari Hindi',serif;font-weight:700;pointer-events:none;z-index:999;animation:bF .9s cubic-bezier(.22,1,.36,1) forwards;text-shadow:0 0 20px rgba(249,115,22,.8)}
+        @keyframes bF{0%{opacity:1;transform:translateY(0) scale(1)}40%{opacity:1;transform:translateY(-50px) scale(1.4)}100%{opacity:0;transform:translateY(-120px) scale(.8)}}
 
-        /* Outer glow ring */
-        .orb-glow-ring {
-            position: absolute;
-            width: 310px; height: 310px;
-            border-radius: 50%;
-            background: conic-gradient(
-                from 0deg,
-                rgba(249,115,22,0.0) 0%,
-                rgba(249,115,22,0.15) 25%,
-                rgba(251,191,36,0.2) 50%,
-                rgba(220,38,38,0.12) 75%,
-                rgba(249,115,22,0.0) 100%
-            );
-            animation: orbRingSpin 6s linear infinite;
-        }
-        @keyframes orbRingSpin { to { transform: rotate(360deg); } }
+        /* Mala complete */
+        .mc{position:fixed;inset:0;background:rgba(8,6,8,.94);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;animation:fI .3s ease;cursor:pointer}
+        @keyframes fI{from{opacity:0}to{opacity:1}}
+        .mc-e{font-size:5rem;animation:cb .6s ease-in-out infinite alternate}
+        @keyframes cb{from{transform:scale(1)}to{transform:scale(1.1)}}
+        .mc-m{font-family:'Tiro Devanagari Hindi',serif;font-size:2.6rem;color:var(--gold);text-shadow:0 0 40px rgba(251,191,36,.8)}
+        .mc-s{font-size:.95rem;font-weight:700;color:var(--text);letter-spacing:1px}
+        .mc-c{font-size:1.9rem;font-weight:900;color:var(--saffron)}
 
-        .orb-glow-ring-2 {
-            position: absolute;
-            width: 280px; height: 280px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(251,191,36,0.2);
-            animation: orbRingSpin2 4s linear infinite reverse;
-        }
-        @keyframes orbRingSpin2 { to { transform: rotate(360deg); } }
+        /* Onboarding */
+        .ob{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 20px;gap:20px;max-width:400px;margin:0 auto}
+        .ob h1{font-family:'Tiro Devanagari Hindi',serif;font-size:5rem;color:var(--saffron);text-shadow:0 0 40px rgba(249,115,22,.6);animation:rG 2s ease-in-out infinite alternate;margin-bottom:6px;text-align:center}
+        .ob p.sub{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--muted);text-align:center}
+        .ocard{width:100%;background:var(--glass);border:1px solid var(--border);border-radius:26px;padding:24px 20px;position:relative;overflow:hidden}
+        .ocard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+        .ocard h2{font-size:1.05rem;font-weight:700;text-align:center;margin-bottom:18px;color:var(--gold)}
+        .fl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:5px}
+        .fi{width:100%;background:rgba(0,0,0,.4);border:1px solid var(--border);padding:13px 15px;border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:500;margin-bottom:12px;outline:none;transition:border-color .2s,box-shadow .2s}
+        .fi:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(249,115,22,.12)}
+        .fi::placeholder{color:rgba(254,249,240,.2)}
+        .benter{width:100%;background:linear-gradient(135deg,var(--saffron-deep),var(--saffron),#fb923c);border:none;color:white;padding:14px;border-radius:14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:900;box-shadow:0 8px 25px rgba(249,115,22,.35);transition:transform .15s,box-shadow .15s;margin-top:4px}
+        .benter:hover{transform:translateY(-1px);box-shadow:0 12px 35px rgba(249,115,22,.45)}
+        .benter:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
-        .jaap-btn {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            outline: none;
-            background: none;
-            z-index: 5;
-            -webkit-user-select: none;
-            user-select: none;
-        }
+        /* SEO */
+        .seo{padding:20px 20px 50px;max-width:480px;margin:0 auto}
+        .seo h2{font-family:'Yatra One',system-ui;font-size:1.25rem;color:var(--gold);margin-bottom:8px;margin-top:24px}
+        .seo p,.seo li{font-size:.82rem;line-height:1.7;color:var(--muted)}
+        .seo ul{padding-left:16px}
+        .seo li{margin-bottom:3px}
+        hr.div{border:none;border-top:1px solid var(--border);margin:26px 0 6px}
+        .fq{margin-bottom:14px}
+        .fq-q{font-size:.86rem;font-weight:700;color:var(--text);margin-bottom:3px}
 
-        .orb-inner {
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            background:
-                radial-gradient(circle at 35% 35%, rgba(254,249,240,0.12) 0%, transparent 45%),
-                radial-gradient(circle at 65% 65%, rgba(220,38,38,0.08) 0%, transparent 50%),
-                linear-gradient(145deg, rgba(249,115,22,0.15) 0%, rgba(16,13,16,0.9) 60%, rgba(16,13,16,1) 100%);
-            border: 1.5px solid rgba(251,191,36,0.25);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 2px;
-            box-shadow:
-                0 0 0 1px rgba(249,115,22,0.1),
-                0 0 30px rgba(249,115,22,0.15),
-                0 0 80px rgba(249,115,22,0.08),
-                inset 0 1px 0 rgba(255,255,255,0.08),
-                inset 0 -1px 0 rgba(0,0,0,0.3);
-            transition: transform 0.08s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .orb-inner::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: conic-gradient(
-                from 0deg,
-                transparent 0deg,
-                rgba(251,191,36,0.06) 60deg,
-                transparent 120deg
-            );
-            animation: orbShimmer 3s linear infinite;
-        }
-        @keyframes orbShimmer { to { transform: rotate(360deg); } }
-
-        .jaap-btn:active .orb-inner {
-            transform: scale(0.93);
-            box-shadow:
-                0 0 0 1px rgba(249,115,22,0.3),
-                0 0 50px rgba(249,115,22,0.4),
-                0 0 100px rgba(249,115,22,0.15),
-                inset 0 1px 0 rgba(255,255,255,0.12),
-                inset 0 -1px 0 rgba(0,0,0,0.4);
-        }
-
-        .orb-radha {
-            font-family: 'Tiro Devanagari Hindi', serif;
-            font-size: 3.8rem;
-            color: var(--saffron);
-            text-shadow:
-                0 0 20px rgba(249,115,22,0.8),
-                0 0 40px rgba(249,115,22,0.4),
-                0 0 80px rgba(249,115,22,0.2);
-            line-height: 1;
-            position: relative;
-            z-index: 1;
-            animation: radhaGlow 2s ease-in-out infinite alternate;
-        }
-        @keyframes radhaGlow {
-            from { text-shadow: 0 0 20px rgba(249,115,22,0.8), 0 0 40px rgba(249,115,22,0.4); }
-            to   { text-shadow: 0 0 30px rgba(251,191,36,0.9), 0 0 60px rgba(249,115,22,0.5), 0 0 100px rgba(249,115,22,0.25); }
-        }
-
-        .orb-count {
-            font-size: 3.5rem;
-            font-weight: 900;
-            line-height: 1;
-            color: var(--text);
-            font-variant-numeric: tabular-nums;
-            position: relative;
-            z-index: 1;
-            letter-spacing: -2px;
-        }
-
-        .orb-subtitle {
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--muted);
-            position: relative;
-            z-index: 1;
-            margin-top: 2px;
-        }
-
-        /* ─── TAP HINT ─── */
-        .tap-hint {
-            font-size: 0.75rem;
-            color: var(--muted);
-            letter-spacing: 1px;
-            text-align: center;
-            animation: hintPulse 2s ease-in-out infinite;
-        }
-        @keyframes hintPulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
-
-        /* ─── PROGRESS SECTION ─── */
-        .progress-section {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            padding: 16px 18px;
-            position: relative;
-            overflow: hidden;
-        }
-        .progress-section::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--saffron), var(--gold), var(--saffron), transparent);
-            opacity: 0.5;
-        }
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .progress-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--muted);
-        }
-        .progress-pct {
-            font-size: 0.85rem;
-            font-weight: 900;
-            color: var(--gold);
-        }
-        .progress-bar-track {
-            height: 8px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 99px;
-            overflow: hidden;
-            position: relative;
-        }
-        .progress-bar-fill {
-            height: 100%;
-            border-radius: 99px;
-            background: linear-gradient(90deg, var(--saffron-deep), var(--saffron), var(--gold));
-            box-shadow: 0 0 12px rgba(249,115,22,0.6);
-            transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
-        }
-        .progress-bar-fill::after {
-            content: '';
-            position: absolute;
-            right: -1px; top: 0; bottom: 0;
-            width: 6px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(255,255,255,0.8);
-            opacity: 0.8;
-        }
-        .bead-dots {
-            display: flex;
-            gap: 3px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-        .bead-dot {
-            width: 9px; height: 9px;
-            border-radius: 50%;
-            border: 1px solid rgba(251,191,36,0.2);
-            background: rgba(255,255,255,0.04);
-            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
-        }
-        .bead-dot.filled {
-            background: linear-gradient(135deg, var(--saffron), var(--gold));
-            border-color: var(--gold);
-            box-shadow: 0 0 6px rgba(249,115,22,0.5);
-        }
-        .bead-dot.current {
-            background: var(--gold-light);
-            border-color: var(--gold-light);
-            box-shadow: 0 0 10px rgba(251,191,36,0.8);
-            transform: scale(1.3);
-            animation: beadPulse 0.6s ease-in-out;
-        }
-        @keyframes beadPulse {
-            0%   { transform: scale(1); }
-            50%  { transform: scale(1.8); box-shadow: 0 0 20px rgba(251,191,36,1); }
-            100% { transform: scale(1.3); }
-        }
-
-        /* ─── LEADERBOARD ─── */
-        .leaderboard-card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            padding: 16px 18px;
-            position: relative;
-            overflow: hidden;
-        }
-        .leaderboard-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--kumkum), var(--saffron), transparent);
-            opacity: 0.5;
-        }
-        .lb-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-        .lb-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--muted);
-        }
-        .lb-live {
-            display: flex; align-items: center; gap: 5px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--rose);
-            letter-spacing: 0.5px;
-        }
-        .lb-live-dot {
-            width: 6px; height: 6px;
-            background: var(--rose);
-            border-radius: 50%;
-            animation: livePulse 1.5s ease-in-out infinite;
-        }
-        @keyframes livePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.6)} }
-
-        .lb-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-            transition: background 0.2s;
-        }
-        .lb-row:last-child { border-bottom: none; }
-        .lb-rank {
-            width: 28px; height: 28px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 900;
-            flex-shrink: 0;
-        }
-        .lb-rank.r1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a0a00; }
-        .lb-rank.r2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
-        .lb-rank.r3 { background: linear-gradient(135deg, #c2410c, #b45309); color: #fff; }
-        .lb-rank.rn { background: rgba(255,255,255,0.06); color: var(--muted); }
-        .lb-info { flex: 1; min-width: 0; }
-        .lb-name { font-weight: 700; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .lb-city { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
-        .lb-count {
-            font-size: 1rem;
-            font-weight: 900;
-            color: var(--gold);
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* ─── BOTTOM CONTROLS ─── */
-        .bottom-controls {
-            display: flex;
-            gap: 10px;
-            padding-bottom: 8px;
-        }
-        .ctrl-btn {
-            flex: 1;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 13px;
-            border-radius: 16px;
-            cursor: pointer;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.82rem;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            transition: background 0.2s, border-color 0.2s, transform 0.1s;
-        }
-        .ctrl-btn:hover { background: var(--glass-hover); border-color: var(--border-hot); }
-        .ctrl-btn:active { transform: scale(0.97); }
-        .ctrl-btn.danger:hover { background: rgba(220,38,38,0.1); border-color: rgba(220,38,38,0.4); color: var(--rose); }
-
-        /* ─── SUPPORT FAB ─── */
-        .fab-support {
-            position: fixed;
-            bottom: 22px;
-            right: 18px;
-            background: linear-gradient(135deg, #fff5e4, #fff);
-            color: #7c2d12;
-            padding: 11px 20px;
-            border-radius: 99px;
-            text-decoration: none;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 900;
-            font-size: 0.82rem;
-            letter-spacing: 0.5px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(249,115,22,0.2);
-            z-index: 100;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex; align-items: center; gap: 6px;
-        }
-        .fab-support:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(249,115,22,0.4); }
-
-        /* ─── BURST ANIMATION ─── */
-        .naam-burst {
-            position: fixed;
-            font-family: 'Tiro Devanagari Hindi', serif;
-            font-weight: 700;
-            pointer-events: none;
-            z-index: 999;
-            animation: burstFly 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
-            text-shadow: 0 0 20px rgba(249,115,22,0.8);
-        }
-        @keyframes burstFly {
-            0%   { opacity: 1; transform: translateY(0) scale(1); }
-            40%  { opacity: 1; transform: translateY(-50px) scale(1.4); }
-            100% { opacity: 0; transform: translateY(-120px) scale(0.8); }
-        }
-
-        /* ─── MALA COMPLETE OVERLAY ─── */
-        .mala-complete {
-            position: fixed;
-            inset: 0;
-            background: rgba(8,6,8,0.92);
-            z-index: 200;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .mala-complete-text {
-            font-family: 'Tiro Devanagari Hindi', serif;
-            font-size: 5rem;
-            color: var(--gold);
-            text-shadow: 0 0 40px rgba(251,191,36,0.8);
-            animation: celebPulse 0.6s ease-in-out infinite alternate;
-        }
-        @keyframes celebPulse { from{transform:scale(1)} to{transform:scale(1.08)} }
-        .mala-complete-sub {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text);
-            letter-spacing: 1px;
-        }
-        .mala-complete-count {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--saffron);
-        }
-
-        /* ─── ONBOARDING ─── */
-        .onboard-shell {
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 30px 20px;
-            gap: 24px;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        .onboard-hero {
-            text-align: center;
-        }
-        .onboard-hero h1 {
-            font-family: 'Tiro Devanagari Hindi', serif;
-            font-size: 5rem;
-            color: var(--saffron);
-            text-shadow: 0 0 40px rgba(249,115,22,0.6);
-            animation: radhaGlow 2s ease-in-out infinite alternate;
-            margin-bottom: 8px;
-        }
-        .onboard-hero p {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--muted);
-        }
-        .onboard-card {
-            width: 100%;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 28px 24px;
-            position: relative;
-            overflow: hidden;
-        }
-        .onboard-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-        }
-        .onboard-card h2 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 22px;
-            color: var(--gold);
-        }
-        .field-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--muted);
-            margin-bottom: 6px;
-        }
-        .field-input {
-            width: 100%;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border);
-            padding: 14px 16px;
-            border-radius: 14px;
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 14px;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .field-input:focus {
-            border-color: var(--saffron);
-            box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
-        }
-        .field-input::placeholder { color: rgba(254,249,240,0.25); }
-        .btn-enter {
-            width: 100%;
-            background: linear-gradient(135deg, var(--saffron-deep), var(--saffron), #fb923c);
-            border: none;
-            color: white;
-            padding: 16px;
-            border-radius: 16px;
-            cursor: pointer;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 1rem;
-            font-weight: 900;
-            letter-spacing: 0.5px;
-            margin-top: 4px;
-            box-shadow: 0 8px 25px rgba(249,115,22,0.35);
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
-        .btn-enter:hover { transform: translateY(-1px); box-shadow: 0 12px 35px rgba(249,115,22,0.45); }
-        .btn-enter:active { transform: scale(0.98); }
-
-        /* ─── SEO CONTENT (visually hidden but crawlable) ─── */
-        .seo-block {
-            padding: 20px 20px 40px;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-        .seo-block h2 {
-            font-family: 'Yatra One', system-ui;
-            font-size: 1.4rem;
-            color: var(--gold);
-            margin-bottom: 10px;
-            margin-top: 28px;
-        }
-        .seo-block p, .seo-block li {
-            font-size: 0.85rem;
-            line-height: 1.7;
-            color: var(--muted);
-        }
-        .seo-block ul { padding-left: 16px; }
-        .seo-block ul li { margin-bottom: 4px; }
-        .seo-divider {
-            border: none;
-            border-top: 1px solid var(--border);
-            margin: 30px 0 10px;
-        }
-        .faq-item { margin-bottom: 18px; }
-        .faq-q { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(249,115,22,0.3); border-radius: 4px; }
+        ::-webkit-scrollbar{width:4px}
+        ::-webkit-scrollbar-thumb{background:rgba(249,115,22,.3);border-radius:4px}
     </style>
 </head>
 <body>
-    <div id="root"></div>
+<div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useCallback, useRef } = React;
+<!-- ✅ YOUR REAL FIREBASE CONFIG — already filled in! -->
+<script>
+    const FIREBASE_CONFIG = {
+        apiKey:            "AIzaSyCh_LnzHD0eLW8ylzhFhwwXWBsxLJa9I24",
+        authDomain:        "naamjaa-51e98.firebaseapp.com",
+        databaseURL:       "https://naamjaa-51e98-default-rtdb.firebaseio.com",
+        projectId:         "naamjaa-51e98",
+        storageBucket:     "naamjaa-51e98.firebasestorage.app",
+        messagingSenderId: "645882295354",
+        appId:             "1:645882295354:web:3fd6bbf93e3a1d09573103",
+        measurementId:     "G-VZ427DJ7BN"
+    };
 
-        /* ── Floating petals ─────────────────────── */
-        function spawnPetal(x, y) {
-            const el = document.createElement('div');
-            el.className = 'petal';
-            const emojis = ['🌸','🌺','🪷'];
-            el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-            const size = 16 + Math.random() * 14;
-            el.style.cssText = `font-size:${size}px;left:${x - 12}px;top:${y - 12}px;animation-duration:${2 + Math.random() * 1.5}s`;
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 3200);
+    try {
+        firebase.initializeApp(FIREBASE_CONFIG);
+        console.log("✅ Firebase connected — NaamJaa is LIVE!");
+    } catch(e) {
+        console.error("Firebase init error:", e);
+    }
+
+    const db = firebase.database();
+</script>
+
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef } = React;
+
+/* ══ Helpers ══ */
+function spawnPetal(x, y) {
+    const el = document.createElement('div');
+    el.className = 'petal';
+    el.innerText = ['🌸','🌺','🪷'][Math.floor(Math.random()*3)];
+    const s = 14 + Math.random()*14;
+    el.style.cssText = `font-size:${s}px;left:${x-12}px;top:${y-12}px;animation-duration:${2+Math.random()*1.5}s`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3600);
+}
+
+function spawnBurst(x, y, n) {
+    const el = document.createElement('div');
+    el.className = 'burst';
+    const msgs = ['राधा','॥राधे॥','हरे','जय','🙏','✨','🪷'];
+    el.innerText = n % 27 === 0 ? '🪷 राधे' : msgs[n % msgs.length];
+    const cols = ['#f97316','#fbbf24','#fb7185','#fef3c7'];
+    el.style.cssText = `font-size:${1.1+Math.random()*.8}rem;color:${cols[n%4]};left:${x-20}px;top:${y-20}px`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 950);
+}
+
+function initials(name = '') {
+    return name.trim().split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase() || '🙏';
+}
+
+function fmt(n) {
+    if (!n && n!==0) return '0';
+    n = Number(n);
+    if (n >= 1e7) return (n/1e7).toFixed(1)+' Cr';
+    if (n >= 1e5) return (n/1e5).toFixed(1)+' L';
+    if (n >= 1000) return (n/1000).toFixed(1)+'K';
+    return String(n);
+}
+
+/* ══ Firebase writes ══ */
+function fbCreate(uid, name, city) {
+    db.ref(`users/${uid}`).set({
+        displayName: name,
+        city: city || 'Vrindavan',
+        lifetime: 0,
+        weekly: 0,
+        joinedAt: Date.now(),
+    });
+    db.ref('global/totalCount').transaction(n => n || 0);
+}
+
+function fbIncrement(uid, amount) {
+    // Update user weekly + lifetime
+    db.ref(`users/${uid}`).transaction(cur => {
+        if (!cur) return null;
+        return {
+            ...cur,
+            lifetime: (cur.lifetime || 0) + amount,
+            weekly:   (cur.weekly   || 0) + amount,
+        };
+    });
+    // Global total — ticks live for everyone
+    db.ref('global/totalCount').transaction(n => (n || 0) + amount);
+    // Live tap event — auto-deleted after 15 seconds
+    const ref = db.ref('taps').push({ uid, ts: Date.now(), amount });
+    setTimeout(() => ref.remove().catch(()=>{}), 15000);
+}
+
+/* ══ Sub-components ══ */
+function MalaArc({ count }) {
+    const bead = count % 108;
+    return (
+        <div className="arc">
+            <svg viewBox="0 0 320 155" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="gw">
+                        <feGaussianBlur stdDeviation="2" result="b"/>
+                        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                </defs>
+                {Array.from({length:108},(_,i) => {
+                    const a = (i/108)*Math.PI;
+                    const x = 160 + 130*Math.cos(Math.PI-a);
+                    const y = 150 - 118*Math.sin(a);
+                    const filled  = i < bead;
+                    const current = i === bead-1;
+                    return <circle key={i} cx={x} cy={y}
+                        r={current ? 5.5 : 3.5}
+                        fill={current ? '#fef3c7' : filled ? '#f97316' : 'rgba(255,255,255,0.07)'}
+                        stroke={current ? '#fbbf24' : filled ? 'rgba(249,115,22,0.4)' : 'rgba(255,255,255,0.04)'}
+                        strokeWidth="0.5"
+                        filter={current ? 'url(#gw)' : undefined}
+                        opacity={filled||current ? 1 : 0.45}
+                    />;
+                })}
+            </svg>
+        </div>
+    );
+}
+
+function MalaComplete({ malaCount, onDismiss }) {
+    useEffect(() => { const t = setTimeout(onDismiss, 3500); return ()=>clearTimeout(t); }, []);
+    return (
+        <div className="mc" onClick={onDismiss}>
+            <div className="mc-e">🪷</div>
+            <div className="mc-m">माला पूर्ण!</div>
+            <div className="mc-s">Mala Complete — Jai Radhe!</div>
+            <div className="mc-c">{malaCount} × 108 = {fmt(malaCount*108)}</div>
+            <div style={{fontSize:'.72rem',color:'rgba(254,249,240,.28)',marginTop:'8px'}}>Tap to continue</div>
+        </div>
+    );
+}
+
+/* ══ MAIN APP ══ */
+function App() {
+    const [count,       setCount]   = useState(0);
+    const [user,        setUser]    = useState(null);
+    const [leaderboard, setLboard]  = useState([]);
+    const [globalTotal, setGlobal]  = useState(0);
+    const [actFeed,     setActFeed] = useState([]);
+    const [showMalaOk,  setMalaOk]  = useState(false);
+    const [name,        setName]    = useState('');
+    const [city,        setCity]    = useState('');
+    const [connected,   setConn]    = useState(false);
+
+    const prevMala   = useRef(0);
+    const userRef    = useRef(null);
+    const namesCache = useRef({});
+
+    /* Restore local session */
+    useEffect(() => {
+        const saved = localStorage.getItem('radha_jaap_user');
+        if (saved) {
+            const p = JSON.parse(saved);
+            setUser(p); userRef.current = p;
+            setCount(p.lifetime || 0);
+            prevMala.current = Math.floor((p.lifetime||0)/108);
         }
+    }, []);
 
-        /* ── Naam burst ──────────────────────────── */
-        function spawnBurst(x, y, bead) {
-            const el = document.createElement('div');
-            el.className = 'naam-burst';
-            const msgs = ['राधा'];
-            el.innerText = bead % 27 === 0 ? '🪷 राधे' : msgs[bead % msgs.length];
-            const col = ['#f97316','#fbbf24','#fb7185','#fef3c7'];
-            el.style.cssText = `font-size:${1.2 + Math.random()*0.8}rem;color:${col[bead%4]};left:${x-20}px;top:${y-20}px`;
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 900);
-        }
+    /* ══ Firebase real-time listeners ══ */
+    useEffect(() => {
+        // Connection state
+        db.ref('.info/connected').on('value', s => setConn(s.val() === true));
 
-        /* ── Mala arc SVG ────────────────────────── */
-        function MalaArc({ count }) {
-            const bead = count % 108;
-            const total = 108;
-            const segments = [];
-            const cx = 160, cy = 155, rx = 130, ry = 120;
-            for (let i = 0; i < total; i++) {
-                const angle = (i / total) * Math.PI;
-                const x = cx + rx * Math.cos(Math.PI - angle);
-                const y = cy - ry * Math.sin(angle);
-                const filled = i < bead;
-                const current = i === bead - 1;
-                segments.push({ x, y, filled, current });
-            }
-            return (
-                <div className="mala-arc-wrapper">
-                    <div className="mala-svg-container">
-                        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <radialGradient id="bgGrad" cx="50%" cy="100%">
-                                    <stop offset="0%" stopColor="rgba(249,115,22,0.06)"/>
-                                    <stop offset="100%" stopColor="rgba(249,115,22,0)"/>
-                                </radialGradient>
-                                <filter id="glow">
-                                    <feGaussianBlur stdDeviation="2" result="blur"/>
-                                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                                </filter>
-                            </defs>
-                            {segments.map((s, i) => (
-                                <circle
-                                    key={i}
-                                    cx={s.x} cy={s.y}
-                                    r={s.current ? 5 : 3.5}
-                                    fill={s.current ? '#fef3c7' : s.filled ? '#f97316' : 'rgba(255,255,255,0.08)'}
-                                    stroke={s.current ? '#fbbf24' : s.filled ? 'rgba(249,115,22,0.4)' : 'rgba(255,255,255,0.05)'}
-                                    strokeWidth="0.5"
-                                    filter={s.current ? 'url(#glow)' : undefined}
-                                    opacity={s.filled ? 1 : 0.5}
-                                />
-                            ))}
-                        </svg>
-                    </div>
-                </div>
-            );
-        }
+        // 1️⃣ GLOBAL COUNTER — updates live for all users
+        const gRef = db.ref('global/totalCount');
+        gRef.on('value', s => setGlobal(s.val() || 0));
 
-        /* ── Mala complete overlay ───────────────── */
-        function MalaComplete({ malaCount, onDismiss }) {
-            useEffect(() => {
-                const t = setTimeout(onDismiss, 3000);
-                return () => clearTimeout(t);
-            }, [onDismiss]);
-            return (
-                <div className="mala-complete" onClick={onDismiss}>
-                    <div className="mala-complete-text">🪷</div>
-                    <div className="mala-complete-text" style={{fontSize:'2.5rem'}}>माला पूर्ण!</div>
-                    <div className="mala-complete-sub">Mala Round Complete!</div>
-                    <div className="mala-complete-count">{malaCount} × 108 = {malaCount * 108}</div>
-                    <div style={{fontSize:'0.8rem',color:'rgba(254,249,240,0.4)',marginTop:'8px'}}>Tap to continue</div>
-                </div>
-            );
-        }
+        // 2️⃣ LEADERBOARD — top 10 by weekly count, live
+        const lRef = db.ref('users').orderByChild('weekly').limitToLast(10);
+        lRef.on('value', snap => {
+            const rows = [];
+            snap.forEach(c => rows.unshift({ id: c.key, ...c.val() }));
+            setLboard(rows);
+        });
 
-        /* ── Main App ────────────────────────────── */
-        function App() {
-            const [count, setCount]           = useState(0);
-            const [user, setUser]             = useState(null);
-            const [globalData, setGlobalData] = useState([]);
-            const [name, setName]             = useState('');
-            const [city, setCity]             = useState('');
-            const [showMalaComplete, setMalaComplete] = useState(false);
-            const prevMalaRef = useRef(0);
-
-            useEffect(() => {
-                const saved = localStorage.getItem('radha_jaap_user');
-                if (saved) {
-                    const p = JSON.parse(saved);
-                    setUser(p);
-                    setCount(p.lifetime || 0);
-                    prevMalaRef.current = Math.floor((p.lifetime || 0) / 108);
-                }
-                fetchGlobal();
-            }, []);
-
-            const fetchGlobal = async () => {
+        // 3️⃣ LIVE TAP FEED — shows who's chanting right now
+        const tRef = db.ref('taps').orderByChild('ts').limitToLast(10);
+        tRef.on('child_added', async snap => {
+            const val = snap.val();
+            if (!val) return;
+            // Cache user names to avoid repeated reads
+            if (!namesCache.current[val.uid]) {
                 try {
-                    const res = await fetch('/.netlify/functions/leaderboard');
-                    if (res.ok) setGlobalData(await res.json());
-                } catch {}
-            };
-
-            const handleTap = useCallback((e) => {
-                if (!user) return;
-                if (navigator.vibrate) navigator.vibrate([8]);
-
-                const x = e?.clientX ?? window.innerWidth / 2;
-                const y = e?.clientY ?? window.innerHeight / 2;
-
-                setCount(prev => {
-                    const next = prev + 1;
-                    const updated = { ...user, lifetime: next };
-                    localStorage.setItem('radha_jaap_user', JSON.stringify(updated));
-
-                    const newMala = Math.floor(next / 108);
-                    if (newMala > prevMalaRef.current) {
-                        prevMalaRef.current = newMala;
-                        setTimeout(() => setMalaComplete(true), 100);
-                    }
-
-                    spawnBurst(x, y, next);
-                    if (next % 10 === 0) { spawnPetal(x, y); spawnPetal(x + 40, y - 30); }
-
-                    fetch('/.netlify/functions/increment', {
-                        method: 'POST',
-                        body: JSON.stringify({ user_id: user.id, amount: 1 })
-                    }).catch(() => {});
-
-                    return next;
-                });
-            }, [user]);
-
-            useEffect(() => {
-                const kd = (e) => {
-                    if (e.key === ' ' || e.key === 'Enter') {
-                        e.preventDefault();
-                        handleTap({ clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 });
-                    }
-                };
-                window.addEventListener('keydown', kd);
-                return () => window.removeEventListener('keydown', kd);
-            }, [handleTap]);
-
-            const createProfile = async () => {
-                if (!name.trim()) return;
-                const userData = {
-                    id: 'u_' + Math.random().toString(36).slice(2, 11),
-                    display_name: name.trim(),
-                    city: city.trim() || 'Vrindavan',
-                    lifetime: 0
-                };
-                setUser(userData);
-                localStorage.setItem('radha_jaap_user', JSON.stringify(userData));
-                fetch('/.netlify/functions/create-profile', {
-                    method: 'POST',
-                    body: JSON.stringify({ name: userData.display_name, city: userData.city })
-                }).catch(() => {});
-            };
-
-            const bead = count % 108;
-            const malaCount = Math.floor(count / 108);
-            const pct = Math.round((bead / 108) * 100);
-
-            /* ── Onboarding ── */
-            if (!user) {
-                return (
-                    <div className="onboard-shell">
-                        <div className="onboard-hero">
-                            <h1>राधा</h1>
-                            <p>Digital Jaap Mala Counter</p>
-                        </div>
-                        <div className="onboard-card">
-                            <h2>🙏 Begin Your Darbar</h2>
-                            <div className="field-label">Your Name</div>
-                            <input className="field-input" placeholder="Radhe Shyam Das…" value={name} onChange={e => setName(e.target.value)} onKeyDown={e => e.key === 'Enter' && createProfile()} />
-                            <div className="field-label">Your City / Dham</div>
-                            <input className="field-input" placeholder="Vrindavan, Mathura…" value={city} onChange={e => setCity(e.target.value)} onKeyDown={e => e.key === 'Enter' && createProfile()} />
-                            <button className="btn-enter" onClick={createProfile} disabled={!name.trim()}>
-                                Enter Darbar ✨
-                            </button>
-                        </div>
-                        <p style={{fontSize:'0.72rem',color:'rgba(254,249,240,0.3)',textAlign:'center',letterSpacing:'0.5px',lineHeight:'1.6'}}>
-                            Free forever · No login required · Works offline
-                        </p>
-                    </div>
-                );
+                    const ns = await db.ref(`users/${val.uid}/displayName`).once('value');
+                    const cs = await db.ref(`users/${val.uid}/city`).once('value');
+                    namesCache.current[val.uid] = {
+                        name: ns.val() || 'Devotee',
+                        city: cs.val() || 'Vrindavan'
+                    };
+                } catch { namesCache.current[val.uid] = { name:'Devotee', city:'Vrindavan' }; }
             }
+            const { name: n, city: c } = namesCache.current[val.uid];
+            setActFeed(prev => [
+                { key: snap.key, name: n, city: c, ts: val.ts },
+                ...prev.filter(x => x.key !== snap.key)
+            ].slice(0, 5));
+        });
+        tRef.on('child_removed', snap => {
+            setActFeed(prev => prev.filter(x => x.key !== snap.key));
+        });
 
-            /* ── Main UI ── */
-            return (
-                <>
-                    {showMalaComplete && (
-                        <MalaComplete malaCount={malaCount} onDismiss={() => setMalaComplete(false)} />
-                    )}
+        return () => { gRef.off(); lRef.off(); tRef.off(); };
+    }, []);
 
-                    <div className="app-shell">
-                        {/* Header */}
-                        <div className="header">
-                            <div className="header-brand">
-                                <span className="lotus">🪷</span>
-                                <span className="brand-name">NaamJaa</span>
-                            </div>
-                            <div className="streak-badge">
-                                <span>🔥</span>
-                                <span>{user.display_name.split(' ')[0]}'s Seva</span>
+    /* Tap handler */
+    const handleTap = useCallback((e) => {
+        const u = userRef.current;
+        if (!u) return;
+        if (navigator.vibrate) navigator.vibrate([8]);
+        const x = e?.clientX ?? window.innerWidth/2;
+        const y = e?.clientY ?? window.innerHeight/2;
+
+        setCount(prev => {
+            const next = prev + 1;
+            const updated = {...u, lifetime: next};
+            localStorage.setItem('radha_jaap_user', JSON.stringify(updated));
+            userRef.current = updated;
+            const nm = Math.floor(next/108);
+            if (nm > prevMala.current) {
+                prevMala.current = nm;
+                setTimeout(() => setMalaOk(true), 80);
+            }
+            spawnBurst(x, y, next);
+            if (next % 9 === 0) { spawnPetal(x, y); spawnPetal(x+30, y-20); }
+            fbIncrement(u.id, 1);
+            return next;
+        });
+    }, []);
+
+    /* Keyboard shortcut */
+    useEffect(() => {
+        const kd = e => {
+            if (e.key===' '||e.key==='Enter') {
+                e.preventDefault();
+                handleTap({ clientX: window.innerWidth/2, clientY: window.innerHeight/2 });
+            }
+        };
+        window.addEventListener('keydown', kd);
+        return () => window.removeEventListener('keydown', kd);
+    }, [handleTap]);
+
+    /* Create profile */
+    const createProfile = () => {
+        if (!name.trim()) return;
+        const u = {
+            id: 'u_' + Math.random().toString(36).slice(2, 11),
+            display_name: name.trim(),
+            city: city.trim() || 'Vrindavan',
+            lifetime: 0,
+        };
+        setUser(u); userRef.current = u;
+        localStorage.setItem('radha_jaap_user', JSON.stringify(u));
+        fbCreate(u.id, u.display_name, u.city);
+    };
+
+    const bead      = count % 108;
+    const malaCount = Math.floor(count / 108);
+    const pct       = Math.round((bead / 108) * 100);
+
+    /* ── Onboarding ── */
+    if (!user) return (
+        <div className="ob">
+            <div>
+                <h1>राधा</h1>
+                <p className="sub">Digital Jaap Mala · Live 🌍</p>
+            </div>
+            <div className="ocard">
+                <h2>🙏 Begin Your Seva</h2>
+                <div className="fl">Your Name</div>
+                <input className="fi" placeholder="Radhe Shyam Das…" value={name}
+                    onChange={e=>setName(e.target.value)}
+                    onKeyDown={e=>e.key==='Enter'&&createProfile()} />
+                <div className="fl">Your City / Dham</div>
+                <input className="fi" placeholder="Vrindavan, Mathura…" value={city}
+                    onChange={e=>setCity(e.target.value)}
+                    onKeyDown={e=>e.key==='Enter'&&createProfile()} />
+                <button className="benter" onClick={createProfile} disabled={!name.trim()}>
+                    Enter Darbar ✨
+                </button>
+            </div>
+            <p style={{fontSize:'.68rem',color:'rgba(254,249,240,.26)',textAlign:'center',lineHeight:'1.7'}}>
+                Free forever · No login · Live global counter
+            </p>
+        </div>
+    );
+
+    /* ── Main UI ── */
+    return (
+        <>
+            {showMalaOk && <MalaComplete malaCount={malaCount} onDismiss={()=>setMalaOk(false)} />}
+
+            <div className="shell">
+
+                {/* Header */}
+                <div className="hdr">
+                    <div className="hdr-brand">
+                        <span className="lotus">🪷</span>
+                        <span className="brand">NaamJaa</span>
+                    </div>
+                    <div className="online-pill" style={{
+                        color: connected ? 'var(--teal)' : '#f59e0b',
+                        borderColor: connected ? 'rgba(45,212,191,.25)' : 'rgba(245,158,11,.25)',
+                        background: connected ? 'rgba(45,212,191,.1)' : 'rgba(245,158,11,.1)'
+                    }}>
+                        <div className="odot" style={{background: connected ? 'var(--teal)' : '#f59e0b'}} />
+                        {connected ? '🌍 Live' : '📡 Connecting…'}
+                    </div>
+                </div>
+
+                {/* 🌍 Global Live Counter */}
+                <div className="gb">
+                    <div>
+                        <div className="gb-label">🌍 Total Radha Naam Chanted Worldwide</div>
+                        <div className="gb-count">{fmt(globalTotal)}</div>
+                        <div className="gb-sub">by all devotees · updates live</div>
+                    </div>
+                    <div className="gb-icon">🙏</div>
+                </div>
+
+                {/* Stats */}
+                <div className="stats">
+                    <div className="sc">
+                        <div className="sl">My Lifetime</div>
+                        <div className="sv">{fmt(count)}</div>
+                    </div>
+                    <div className="sc">
+                        <div className="sl">Malas</div>
+                        <div className="sv">{malaCount}</div>
+                    </div>
+                    <div className="sc">
+                        <div className="sl">This Mala</div>
+                        <div className="sv">{bead}</div>
+                    </div>
+                </div>
+
+                {/* Mala Arc */}
+                <MalaArc count={count} />
+
+                {/* Main Orb */}
+                <div className="orb-wrap">
+                    <div className="gr1" />
+                    <div className="gr2" />
+                    <button className="jaap-btn" onClick={handleTap}
+                        aria-label="Tap to count Radha Naam Jaap">
+                        <div className="orb-in">
+                            <div className="or">राधा</div>
+                            <div className="oc">{bead}</div>
+                            <div className="os">of 108 beads</div>
+                        </div>
+                    </button>
+                </div>
+
+                <div className="hint">TAP · SPACE · ENTER to count</div>
+
+                {/* Progress + 108 Bead Dots */}
+                <div className="prog">
+                    <div className="ph">
+                        <div className="pt">Mala Progress</div>
+                        <div className="pp">{pct}%</div>
+                    </div>
+                    <div className="ptrack">
+                        <div className="pfill" style={{width: pct+'%'}} />
+                    </div>
+                    <div className="beads">
+                        {Array.from({length:108},(_,i)=>(
+                            <div key={i} className={`bd${i<bead?' f':''}${i===bead-1?' c':''}`} />
+                        ))}
+                    </div>
+                </div>
+
+                {/* ⚡ Live Seva Feed */}
+                {actFeed.length > 0 && (
+                    <div className="act">
+                        <div className="act-hdr">
+                            <div className="act-title">⚡ Live Seva Feed</div>
+                            <div className="lb-live">
+                                <div className="ldot" style={{background:'var(--rose)'}} />
+                                Real-time
                             </div>
                         </div>
-
-                        {/* Stats */}
-                        <div className="stats-row">
-                            <div className="stat-card">
-                                <div className="stat-label">Lifetime</div>
-                                <div className="stat-value">{count.toLocaleString('en-IN')}</div>
-                            </div>
-                            <div className="stat-card">
-                                <div className="stat-label">Malas</div>
-                                <div className="stat-value">{malaCount}</div>
-                            </div>
-                            <div className="stat-card">
-                                <div className="stat-label">This Mala</div>
-                                <div className="stat-value">{bead}</div>
-                            </div>
-                        </div>
-
-                        {/* Mala Arc */}
-                        <MalaArc count={count} />
-
-                        {/* Jaap Orb */}
-                        <div className="jaap-orb-wrapper">
-                            <div className="orb-glow-ring" />
-                            <div className="orb-glow-ring-2" />
-                            <button className="jaap-btn" onClick={handleTap} aria-label="Tap to count Radha Naam Jaap">
-                                <div className="orb-inner">
-                                    <div className="orb-radha">राधा</div>
-                                    <div className="orb-count">{bead}</div>
-                                    <div className="orb-subtitle">of 108 beads</div>
-                                </div>
-                            </button>
-                        </div>
-
-                        <div className="tap-hint">TAP · SPACE · ENTER to count</div>
-
-                        {/* Progress */}
-                        <div className="progress-section">
-                            <div className="progress-header">
-                                <div className="progress-title">Mala Progress</div>
-                                <div className="progress-pct">{pct}%</div>
-                            </div>
-                            <div className="progress-bar-track">
-                                <div className="progress-bar-fill" style={{ width: pct + '%' }} />
-                            </div>
-                            <div className="bead-dots">
-                                {Array.from({ length: 108 }, (_, i) => (
-                                    <div
-                                        key={i}
-                                        className={`bead-dot${i < bead ? ' filled' : ''}${i === bead - 1 ? ' current' : ''}`}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Leaderboard */}
-                        <div className="leaderboard-card">
-                            <div className="lb-header">
-                                <div className="lb-title">Global Seva Board</div>
-                                <div className="lb-live"><div className="lb-live-dot" />LIVE</div>
-                            </div>
-                            {globalData.length > 0 ? globalData.slice(0, 5).map((u, i) => (
-                                <div className="lb-row" key={u.id || i}>
-                                    <div className={`lb-rank ${i===0?'r1':i===1?'r2':i===2?'r3':'rn'}`}>
-                                        {i === 0 ? '👑' : i + 1}
+                        <div className="feed">
+                            {actFeed.map((item, i) => (
+                                <div className="feed-item" key={item.key || i}>
+                                    <div className="ava">{initials(item.name)}</div>
+                                    <div className="ai">
+                                        <div className="an">{item.name}</div>
+                                        <div className="ad">🏡 {item.city}</div>
                                     </div>
-                                    <div className="lb-info">
-                                        <div className="lb-name">{u.display_name}</div>
-                                        <div className="lb-city">🏡 {u.city}</div>
-                                    </div>
-                                    <div className="lb-count">{(u.weekly_total || 0).toLocaleString('en-IN')}</div>
+                                    <div className="abadge">+1 राधा</div>
                                 </div>
-                            )) : (
-                                <p style={{textAlign:'center',fontSize:'0.8rem',color:'var(--muted)',padding:'10px 0'}}>
-                                    🌐 Syncing global devotees…
-                                </p>
-                            )}
-                        </div>
-
-                        {/* Controls */}
-                        <div className="bottom-controls">
-                            <button className="ctrl-btn" onClick={() => setCount(prev => {
-                                const next = Math.max(0, prev - 1);
-                                const updated = { ...user, lifetime: next };
-                                localStorage.setItem('radha_jaap_user', JSON.stringify(updated));
-                                return next;
-                            })}>
-                                ← Undo
-                            </button>
-                            <button className="ctrl-btn danger" onClick={() => {
-                                if (confirm('Reset everything and logout?')) {
-                                    localStorage.clear();
-                                    location.reload();
-                                }
-                            }}>
-                                Reset All
-                            </button>
+                            ))}
                         </div>
                     </div>
+                )}
 
-                    {/* SEO Content */}
-                    <div className="seo-block">
-                        <hr className="seo-divider" />
-
-                        <h2>🪷 What is Radha Naam Jaap?</h2>
-                        <p>Radha Naam Jaap is the sacred devotional practice of repeating the divine name <strong>Radha</strong> — the eternal consort of Lord Krishna. In Vaishnavism and especially in the Braj tradition, chanting Radha's name is considered the highest form of bhakti (devotion). Each repetition (jaap) is believed to purify the mind, deepen divine love, and bring one closer to the Divine.</p>
-
-                        <h2>📿 Why 108 Beads in a Mala?</h2>
-                        <p>The number <strong>108</strong> is profoundly sacred across Hindu, Buddhist, and Vedic traditions. It represents the 108 Upanishads, the 108 divine names of major deities, and the cosmic distance between Earth, the Sun, and Moon measured in their respective diameters. One full round of 108 beads is called a <em>mala</em>. Many devotees complete multiple malas daily as part of their sadhana (spiritual practice).</p>
-
-                        <h2>🙏 How to Use This Digital Jaap Counter</h2>
-                        <ul>
-                            <li>Create your free profile — no sign-up or login required.</li>
-                            <li>Tap the glowing <strong>राधा</strong> orb for each jaap, or press Space / Enter on desktop.</li>
-                            <li>Track your bead-by-bead progress on the 108-bead arc mala.</li>
-                            <li>A celebration animation appears on completing each mala round.</li>
-                            <li>Your lifetime count is saved to your device automatically.</li>
-                            <li>See where you rank among global devotees on the live leaderboard.</li>
-                        </ul>
-
-                        <h2>❓ Frequently Asked Questions</h2>
-                        <div className="faq-item">
-                            <div className="faq-q">Is this digital mala counter free?</div>
-                            <p>Yes — NaamJaa is completely free, forever. No subscription, no ads, no account required.</p>
+                {/* 🏆 Live Leaderboard */}
+                <div className="lb">
+                    <div className="lb-hdr">
+                        <div className="lb-t">🏆 Weekly Seva Board</div>
+                        <div className="lb-live">
+                            <div className="ldot" style={{background: connected?'var(--rose)':'#6b7280'}} />
+                            {connected ? 'Live' : 'Offline'}
                         </div>
-                        <div className="faq-item">
-                            <div className="faq-q">Does it work offline?</div>
-                            <p>Your count is stored locally on your device, so the counter works even without internet. The global leaderboard requires a connection.</p>
-                        </div>
-                        <div className="faq-item">
-                            <div className="faq-q">Can I use this for other mantras?</div>
-                            <p>Absolutely! The 108-bead structure works for any mantra jaap — Hare Krishna, Om Namah Shivaya, Gayatri Mantra, and more. Simply tap for each repetition.</p>
-                        </div>
-                        <div className="faq-item">
-                            <div className="faq-q">What is the significance of Vrindavan / Braj?</div>
-                            <p>Vrindavan and the Braj region in Uttar Pradesh, India, are considered the eternal divine abode of Radha and Krishna. Millions of devotees consider even mentally repeating Radha's name while visualising Vrindavan as spiritually transformative.</p>
-                        </div>
-
-                        <h2>🌐 About NaamJaa</h2>
-                        <p>NaamJaa is a free spiritual tool designed for devotees of all backgrounds who wish to maintain a consistent Naam Jaap practice. Built with love for the global Vaishnavite community — whether you're in Vrindavan, London, New York, or anywhere across the world.</p>
-
-                        <p style={{marginTop:'20px',fontSize:'0.75rem',opacity:0.3,textAlign:'center',letterSpacing:'0.5px'}}>
-                            राधे राधे · Radhe Radhe · 🪷 NaamJaa · naamjaa.netlify.app
-                        </p>
                     </div>
+                    {leaderboard.length > 0
+                        ? leaderboard.map((u, i) => (
+                            <div className="lbr" key={u.id}>
+                                <div className={`lrank ${i===0?'r1':i===1?'r2':i===2?'r3':'rn'}`}>
+                                    {i===0 ? '👑' : i+1}
+                                </div>
+                                <div className="li">
+                                    <div className="ln">{u.displayName}</div>
+                                    <div className="lc-city">🏡 {u.city}</div>
+                                </div>
+                                <div className="lc">{fmt(u.weekly)}</div>
+                            </div>
+                        ))
+                        : <p style={{textAlign:'center',fontSize:'.78rem',color:'var(--muted)',padding:'10px 0'}}>
+                            🌐 {connected ? 'Loading devotees…' : 'Connecting to live data…'}
+                          </p>
+                    }
+                </div>
 
-                    <a href="upi://pay?pa=ankitgupta1181-5@oksbi&pn=Radha%20Jaap&cu=INR" className="fab-support">
-                        ❤️ Support Us
-                    </a>
-                </>
-            );
-        }
+                {/* Controls */}
+                <div className="ctrls">
+                    <button className="cbtn" onClick={()=>{
+                        setCount(prev => {
+                            const next = Math.max(0, prev-1);
+                            const u = {...userRef.current, lifetime: next};
+                            localStorage.setItem('radha_jaap_user', JSON.stringify(u));
+                            userRef.current = u;
+                            return next;
+                        });
+                    }}>← Undo</button>
+                    <button className="cbtn d" onClick={()=>{
+                        if(confirm('Reset everything and logout?')) {
+                            localStorage.clear();
+                            location.reload();
+                        }
+                    }}>Reset All</button>
+                </div>
+            </div>
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
+            {/* SEO content */}
+            <div className="seo">
+                <hr className="div" />
+                <h2>🪷 What is Radha Naam Jaap?</h2>
+                <p>Radha Naam Jaap is the sacred practice of chanting the divine name <strong>Radha</strong>. NaamJaa tracks every jaap with a live global counter — every devotee's count is added together in real time.</p>
+                <h2>🌍 Live Global Counter</h2>
+                <p>Every tap by every devotee worldwide is reflected instantly. See the global count rise as devotees from Vrindavan to London chant together.</p>
+                <h2>📿 Why 108 Beads?</h2>
+                <p>108 is sacred in Vedic tradition. One full mala round = 108 beads. NaamJaa animates each bead and celebrates every completion.</p>
+                <h2>❓ FAQ</h2>
+                <div className="fq"><div className="fq-q">Is this counter free?</div><p>Yes — completely free, forever. No ads, no subscriptions.</p></div>
+                <div className="fq"><div className="fq-q">Does it work offline?</div><p>Your personal count saves locally. Global features need internet.</p></div>
+                <div className="fq"><div className="fq-q">Can I use it for other mantras?</div><p>Yes — Hare Krishna, Om Namah Shivaya, Gayatri Mantra, or any 108-bead practice.</p></div>
+                <p style={{marginTop:'18px',fontSize:'.7rem',opacity:.24,textAlign:'center',letterSpacing:'.5px'}}>राधे राधे · 🪷 NaamJaa · naamjaa.netlify.app</p>
+            </div>
+
+            <a href="upi://pay?pa=ankitgupta1181-5@oksbi&pn=Radha%20Jaap&cu=INR" className="fab">❤️ Support</a>
+        </>
+    );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
 </html>
